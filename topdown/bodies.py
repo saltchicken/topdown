@@ -29,11 +29,25 @@ class Body(pygame.sprite.Sprite):
         self.rect.y = int(self._y - self.HEIGHT / 2)
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
 
+    def physics(self):
+        pass
+
+    def update(self):
+        self.physics()
+
 class Character(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.image.fill((255,0,0))
         self.move_speed = 5
+
+        self.input = Input()
+
+    def physics(self):
+        self.input.update()
+        self.x += self.input.x_axis * self.move_speed
+        self.y += self.input.y_axis * self.move_speed
+
     
 class Enemy(Body):
     def __init__(self, *args, **kwargs):
@@ -41,14 +55,32 @@ class Enemy(Body):
         self.image.fill((0,255,0))
         self.move_speed = 2
 
-class Physics:
+class Input():
     def __init__(self):
-        pass
-    def update(self, input, bodies):
-        for body in bodies:
-            if isinstance(body, Character):
-                body.x += input.x_axis * body.move_speed
-                body.y += input.y_axis * body.move_speed
-            elif isinstance(body, Enemy):
-                body.x += 0.1 * body.move_speed
-                body.y += 0.1 * body.move_speed
+        self.joystick = pygame.joystick.Joystick(0)
+        self.joystick.init()
+
+    def update(self):
+        self.x_axis = self.process_axis(self.joystick.get_axis(0))
+        self.y_axis = self.process_axis(self.joystick.get_axis(1))
+
+    def process_axis(self, value: float):
+        value = round(value, 1)
+        if value <= 0.1 and value >= 0.0:
+            value = 0.0
+        elif value >= -0.1 and value < 0.0:
+            value = 0.0
+        else:
+            value = value
+        return value
+    
+# class Physics:
+#     def __init__(self):
+#         pass
+#     def update(self, input, bodies):
+#         for body in bodies:
+#             if isinstance(body, Character):
+                
+#             elif isinstance(body, Enemy):
+#                 body.x += 0.1 * body.move_speed
+#                 body.y += 0.1 * body.move_speed
