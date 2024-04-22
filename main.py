@@ -1,5 +1,7 @@
-from topdown import Physics
+from loguru import logger
+
+from topdown import Topdown, Physics
 
 if __name__ == "__main__":
-    physics = Physics()
-    print(physics)
+    topdown = Topdown()
+    topdown.loop()
