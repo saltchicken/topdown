@@ -18,7 +18,6 @@ class Topdown:
     def loop(self):
         self.running = True
         while self.running:
-            self.screen.fill((0, 0, 0))
             self.running = self.scene.update()
 
             self.clock.tick(90)

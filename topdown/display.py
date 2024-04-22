@@ -5,6 +5,7 @@ class Display:
     def __init__(self):
         pass
     def update(self, screen, characters):
+        screen.fill((0, 0, 0))
         for character in characters:
             screen.blit(character.image, character.rect)
         pygame.display.flip()
