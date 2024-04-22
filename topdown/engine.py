@@ -43,12 +43,12 @@ class Topdown:
 class Menu():
     def __init__(self, screen):
         self.screen = screen
-
+        self.background = (50, 50, 50)
         self.event = Event()
 
     def update(self):
         running = self.event.update()
-        self.screen.fill((50, 50, 50))
+        self.screen.fill(self.background)
         pygame.display.flip()
         return running
 
@@ -56,12 +56,13 @@ class Menu():
 class Scene():
     def __init__(self, screen):
         self.screen = screen
+        self.background = (0, 0, 0)
         self.event = Event()
         self.sprites = pygame.sprite.Group()
 
     def update(self):
         running = self.event.update()
-        self.screen.fill((0, 0, 0))
+        self.screen.fill(self.background)
         self.sprites.update()
         self.sprites.draw(self.screen)
         pygame.display.flip()
