@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from loguru import logger
 
-from .display import Display, Event
+from .display import Display, Event, MenuDisplay, MenuEvent
 from .bodies import Character, Enemy, Physics
 
 class Topdown:
@@ -16,6 +16,7 @@ class Topdown:
 
         # self.scene = Scene(self.screen)
         self.scene = Scene.from_config(Path('topdown/scenes/scene1.json'), self.screen)
+        self.menu = Menu(self.screen)
         self.clock = pygame.time.Clock()
 
     def loop(self):
@@ -31,6 +32,19 @@ class Topdown:
         pygame.quit()
         import sys
         sys.exit()
+
+class Menu():
+    def __init__(self, screen):
+        self.screen = screen
+
+        self.event = MenuEvent()
+        self.display = MenuDisplay()
+
+    def update(self):
+        running = self.event.update()
+        self.display.update(self.screen)
+        return running
+
 
 class Scene():
     def __init__(self, screen):
