@@ -21,6 +21,9 @@ class Event:
                     # Check if the 'A' button is pressed
                     if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
                         print("A button pressed on the controller!")
+                    elif event.button == 7:
+                        print('Start button: going to scene')
+                        return False
         return True
     
 class MenuDisplay:
@@ -30,15 +33,17 @@ class MenuDisplay:
         screen.fill((20, 20, 20))
         pygame.display.flip()
 
-class MenuEvent:
-    def __init__(self):
-        pass
-    def update(self):
-        for event in pygame.event.get():
-                if event.type == QUIT:
-                    return False
-                elif event.type == JOYBUTTONDOWN:
-                    # Check if the 'A' button is pressed
-                    if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
-                        print("A button pressed on the controller in the menu!")
-        return True
+# class MenuEvent:
+#     def __init__(self):
+#         pass
+#     def update(self):
+#         for event in pygame.event.get():
+#                 if event.type == QUIT:
+#                     return False
+#                 elif event.type == JOYBUTTONDOWN:
+#                     if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
+#                         print("A button pressed on the controller in the menu!")
+#                     elif event.button == 7:
+#                         print('Start button: going to scene')
+#                         return False
+#         return True

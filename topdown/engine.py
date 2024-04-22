@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from loguru import logger
 
-from .display import Display, Event, MenuDisplay, MenuEvent
+from .display import Display, Event, MenuDisplay
 from .bodies import Character, Enemy, Physics
 
 class Topdown:
@@ -23,7 +23,7 @@ class Topdown:
         # TODO: Fix this message with self.running. Shouldn't be needed.
         self.running = True
         while self.running:
-            self.running = self.scene.update()
+            self.running = self.menu.update()
 
             self.clock.tick(90)
         self.exit()
@@ -37,7 +37,7 @@ class Menu():
     def __init__(self, screen):
         self.screen = screen
 
-        self.event = MenuEvent()
+        self.event = Event()
         self.display = MenuDisplay()
 
     def update(self):
