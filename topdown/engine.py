@@ -10,8 +10,17 @@ from .bodies import Player, Enemy
 class Topdown:
     def __init__(self):
         pygame.init()
-        self.WIDTH, self.HEIGHT = 1200, 900
-        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        
+        # # For specific window size
+        # self.WIDTH, self.HEIGHT = 1200, 900
+        # self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        
+        # For fullscreen
+        info = pygame.display.Info()
+        monitor_width = info.current_w
+        monitor_height = info.current_h
+        self.screen = pygame.display.set_mode((monitor_width, monitor_height), pygame.FULLSCREEN)
+
         pygame.display.set_caption("Topdown")
 
         # self.scene = Scene(self.screen)
