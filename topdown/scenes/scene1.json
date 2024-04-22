@@ -1,0 +1,10 @@
+{
+    "character": [
+        {"position": [100, 100]},
+        {"position": [200, 200]}
+    ],
+    "enemies": [
+        {"position": [500, 100]},
+        {"position": [300, 200]}
+    ]
+}

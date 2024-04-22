@@ -1,12 +1,12 @@
 import pygame
 
 class Body():
-    def __init__(self):
+    def __init__(self, position):
         self.WIDTH, self.HEIGHT = 50, 50
         self.image = pygame.Surface((self.WIDTH, self.HEIGHT))
         self.rect = self.image.get_rect()
-        self._x = float(self.WIDTH / 2) 
-        self._y = float(self.HEIGHT / 2)
+        self._x = float(self.WIDTH / 2) + float(position[0])
+        self._y = float(self.HEIGHT / 2) + float(position[1])
 
     @property
     def x(self):
@@ -29,14 +29,14 @@ class Body():
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
 
 class Character(Body):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(**kwargs)
         self.image.fill((255,0,0))
         self.move_speed = 5
     
 class Enemy(Body):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(**kwargs)
         self.image.fill((0,255,0))
         self.move_speed = 2
 
