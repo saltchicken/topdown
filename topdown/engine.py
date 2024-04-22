@@ -16,6 +16,7 @@ class Topdown:
         self.clock = pygame.time.Clock()
 
     def loop(self):
+        # TODO: Fix this message with self.running. Shouldn't be needed.
         self.running = True
         while self.running:
             self.running = self.scene.update()
