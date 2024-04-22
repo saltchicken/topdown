@@ -12,22 +12,14 @@ class Topdown:
         self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         pygame.display.set_caption("Topdown")
 
-        self.event = Event()
-        self.input = Input()
-        self.physics = Physics()
-        self.display = Display()
-        self.scene = Scene()
-
+        self.scene = Scene(self.screen)
         self.clock = pygame.time.Clock()
 
     def loop(self):
         self.running = True
         while self.running:
             self.screen.fill((0, 0, 0))
-            self.running = self.event.update()
-            self.input.update()
-            self.physics.update(self.input, self.scene.bodies)
-            self.display.update(self.screen, self.scene.bodies)
+            self.running = self.scene.update()
 
             self.clock.tick(90)
         self.exit()
@@ -38,10 +30,25 @@ class Topdown:
         sys.exit()
 
 class Scene():
-    def __init__(self):
+    def __init__(self, screen):
+        self.screen = screen
+        
+        self.event = Event()
+        self.input = Input()
+        self.physics = Physics()
+        self.display = Display()
+
         self.bodies = []
         self.bodies.append(Character())
         self.bodies.append(Enemy())
+
+    def update(self):
+        running = self.event.update()
+        self.input.update()
+        self.physics.update(self.input, self.bodies)
+        self.display.update(self.screen, self.bodies)
+        return running
+
 
 class Input():
     def __init__(self):
