@@ -4,11 +4,11 @@ from pygame.locals import QUIT, JOYBUTTONDOWN
 class Display:
     def __init__(self):
         pass
-    def update(self, screen, characters):
-        screen.fill((0, 0, 0))
-        for character in characters:
-            screen.blit(character.image, character.rect)
-        pygame.display.flip()
+    # def update(self, screen, characters):
+    #     screen.fill((0, 0, 0))
+    #     for character in characters:
+    #         screen.blit(character.image, character.rect)
+    #     pygame.display.flip()
 
 class Event:
     def __init__(self):
@@ -30,7 +30,7 @@ class MenuDisplay:
     def __init__(self):
         pass
     def update(self, screen):
-        screen.fill((20, 20, 20))
+        screen.fill((50, 50, 50))
         pygame.display.flip()
 
 # class MenuEvent:

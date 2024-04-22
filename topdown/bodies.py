@@ -1,7 +1,8 @@
 import pygame
 
-class Body():
+class Body(pygame.sprite.Sprite):
     def __init__(self, position):
+        super().__init__()
         self.WIDTH, self.HEIGHT = 50, 50
         self.image = pygame.Surface((self.WIDTH, self.HEIGHT))
         self.rect = self.image.get_rect()

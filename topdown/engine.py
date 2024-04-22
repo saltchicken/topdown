@@ -62,18 +62,21 @@ class Scene():
         self.physics = Physics()
         self.display = Display()
 
-        self.bodies = []
+        self.sprites = pygame.sprite.Group()
+        # self.bodies = []
         # self.add_body(Character())
         # self.add_body(Enemy())
-
-    def add_body(self, body):
-        self.bodies.append(body)
 
     def update(self):
         running = self.event.update()
         self.input.update()
-        self.physics.update(self.input, self.bodies)
-        self.display.update(self.screen, self.bodies)
+        self.physics.update(self.input, self.sprites)
+        self.screen.fill((0, 0, 0))
+        # for character in characters:
+        #     screen.blit(character.image, character.rect)
+        self.sprites.draw(self.screen)
+        pygame.display.flip()
+        # self.display.update(self.screen, self.bodies)
         return running
     
     @classmethod
@@ -83,7 +86,7 @@ class Scene():
             config = json.load(f)
             for character_config in config['character']:
                 body = Character(position = character_config['position'])
-                scene.add_body(body)
+                scene.sprites.add(body)
         return scene
 
 
