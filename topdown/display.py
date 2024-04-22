@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import QUIT
+from pygame.locals import QUIT, JOYBUTTONDOWN
 
 class Display:
     def __init__(self):
@@ -16,4 +16,8 @@ class Event:
         for event in pygame.event.get():
                 if event.type == QUIT:
                     return False
+                elif event.type == JOYBUTTONDOWN:
+                    # Check if the 'A' button is pressed
+                    if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
+                        print("A button pressed on the controller!")
         return True
