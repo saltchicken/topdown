@@ -16,15 +16,15 @@ class Event:
     def update(self):
         for event in pygame.event.get():
                 if event.type == QUIT:
-                    return False
+                    return False, False
                 elif event.type == JOYBUTTONDOWN:
                     # Check if the 'A' button is pressed
                     if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
                         print("A button pressed on the controller!")
                     elif event.button == 7:
                         print('Start button: going to scene')
-                        return False
-        return True
+                        return True, False
+        return True, True
     
 class MenuDisplay:
     def __init__(self):

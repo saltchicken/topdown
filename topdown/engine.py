@@ -22,15 +22,22 @@ class Topdown:
     def loop(self):
         # TODO: Fix this message with self.running. Shouldn't be needed.
         self.running = True
+        self.switch = True
         while self.running:
-            self.running = self.menu.update()
-
-            self.clock.tick(90)
+            self.switch = True
+            while self.switch and self.running:
+                self.running, self.switch = self.menu.update()
+                self.clock.tick(90)
+            self.switch = True
+            while self.switch and self.running:
+                self.running, self.switch = self.scene.update()
+                self.clock.tick(90)
         self.exit()
 
     def exit(self):
         pygame.quit()
         import sys
+        print('Good exit')
         sys.exit()
 
 class Menu():
