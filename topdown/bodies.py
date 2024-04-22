@@ -35,7 +35,7 @@ class Body(pygame.sprite.Sprite):
     def update(self):
         self.physics()
 
-class Character(Body):
+class Player(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.image.fill((255,0,0))
@@ -54,6 +54,10 @@ class Enemy(Body):
         super().__init__(**kwargs)
         self.image.fill((0,255,0))
         self.move_speed = 2
+
+    def physics(self):
+        self.x += 0.1 * self.move_speed
+        self.y += 0.1 * self.move_speed
 
 class Input():
     def __init__(self):
@@ -74,13 +78,3 @@ class Input():
             value = value
         return value
     
-# class Physics:
-#     def __init__(self):
-#         pass
-#     def update(self, input, bodies):
-#         for body in bodies:
-#             if isinstance(body, Character):
-                
-#             elif isinstance(body, Enemy):
-#                 body.x += 0.1 * body.move_speed
-#                 body.y += 0.1 * body.move_speed

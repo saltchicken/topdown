@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from loguru import logger
 
-from .bodies import Character, Enemy
+from .bodies import Player, Enemy
 
 class Topdown:
     def __init__(self):
@@ -37,7 +37,7 @@ class Topdown:
     def exit(self):
         pygame.quit()
         import sys
-        print('Good exit')
+        logger.debug('Good exit')
         sys.exit()
 
 class Scene():
@@ -45,13 +45,23 @@ class Scene():
         self.screen = screen
         self.background = (0, 0, 0)
         self.event = Event()
-        self.sprites = pygame.sprite.Group()
+        self.all_sprites = pygame.sprite.Group()
+        self.players = pygame.sprite.Group()
+        self.enemies = pygame.sprite.Group()
 
     def update(self):
         running = self.event.update()
         self.screen.fill(self.background)
-        self.sprites.update()
-        self.sprites.draw(self.screen)
+        self.all_sprites.update()
+
+        # Get collisions between players and enemies
+        for player in self.players:
+            collisions = pygame.sprite.spritecollide(player, self.enemies, False)
+            if collisions:
+                for collision in collisions:
+                    logger.debug(collision)
+                    
+        self.all_sprites.draw(self.screen)
         pygame.display.flip()
         return running
     
@@ -60,9 +70,14 @@ class Scene():
         scene = cls(screen)
         with open(config_file, 'r') as f:
             config = json.load(f)
-            for character_config in config['character']:
-                body = Character(position = character_config['position'])
-                scene.sprites.add(body)
+            for player_config in config['player']:
+                player = Player(position = player_config['position'])
+                scene.all_sprites.add(player)
+                scene.players.add(player)
+            for enemy_config in config['enemies']:
+                enemy = Enemy(position = enemy_config['position'])
+                scene.all_sprites.add(enemy)
+                scene.enemies.add(enemy)
         return scene
     
 class Event:
