@@ -16,7 +16,7 @@ class Topdown:
 
         # self.scene = Scene(self.screen)
         self.scene = Scene.from_config(Path('topdown/scenes/scene1.json'), self.screen)
-        self.menu = Menu(self.screen)
+        self.menu = Scene(self.screen)
         self.clock = pygame.time.Clock()
 
     def loop(self):
@@ -39,19 +39,6 @@ class Topdown:
         import sys
         print('Good exit')
         sys.exit()
-
-class Menu():
-    def __init__(self, screen):
-        self.screen = screen
-        self.background = (50, 50, 50)
-        self.event = Event()
-
-    def update(self):
-        running = self.event.update()
-        self.screen.fill(self.background)
-        pygame.display.flip()
-        return running
-
 
 class Scene():
     def __init__(self, screen):
