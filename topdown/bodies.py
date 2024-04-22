@@ -1,12 +1,10 @@
 import pygame
 
-class Character():
+class Body():
     def __init__(self):
         self.WIDTH, self.HEIGHT = 50, 50
         self.image = pygame.Surface((self.WIDTH, self.HEIGHT))
-        self.image.fill((255,0,0))
         self.rect = self.image.get_rect()
-        self.move_speed = 5
         self._x = float(self.WIDTH / 2) 
         self._y = float(self.HEIGHT / 2)
 
@@ -29,15 +27,27 @@ class Character():
         self._y = value
         self.rect.y = int(self._y - self.HEIGHT / 2)
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
+
+class Character(Body):
+    def __init__(self):
+        super().__init__()
+        self.image.fill((255,0,0))
+        self.move_speed = 5
     
-    @staticmethod
-    def create_character():
-        return Character()
+class Enemy(Body):
+    def __init__(self):
+        super().__init__()
+        self.image.fill((0,255,0))
+        self.move_speed = 2
 
 class Physics:
     def __init__(self):
         pass
-    def update(self, input, characters):
-        for character in characters:
-            character.x += input.x_axis * character.move_speed
-            character.y += input.y_axis * character.move_speed
+    def update(self, input, bodies):
+        for body in bodies:
+            if isinstance(body, Character):
+                body.x += input.x_axis * body.move_speed
+                body.y += input.y_axis * body.move_speed
+            elif isinstance(body, Enemy):
+                body.x += 0.1 * body.move_speed
+                body.y += 0.1 * body.move_speed

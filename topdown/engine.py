@@ -3,7 +3,7 @@ import pygame
 from loguru import logger
 
 from .display import Display, Event
-from .bodies import Character, Physics
+from .bodies import Character, Enemy, Physics
 
 class Topdown:
     def __init__(self):
@@ -13,17 +13,12 @@ class Topdown:
         pygame.display.set_caption("Topdown")
 
         self.event = Event()
-
         self.input = Input()
         self.physics = Physics()
         self.display = Display()
+        self.scene = Scene()
 
         self.clock = pygame.time.Clock()
-
-        self.characters = []
-        self.characters.append(Character.create_character())
-
-        self.running = False
 
     def loop(self):
         self.running = True
@@ -31,8 +26,8 @@ class Topdown:
             self.screen.fill((0, 0, 0))
             self.running = self.event.update()
             self.input.update()
-            self.physics.update(self.input, self.characters)
-            self.display.update(self.screen, self.characters)
+            self.physics.update(self.input, self.scene.bodies)
+            self.display.update(self.screen, self.scene.bodies)
 
             self.clock.tick(90)
         self.exit()
@@ -41,6 +36,12 @@ class Topdown:
         pygame.quit()
         import sys
         sys.exit()
+
+class Scene():
+    def __init__(self):
+        self.bodies = []
+        self.bodies.append(Character())
+        self.bodies.append(Enemy())
 
 class Input():
     def __init__(self):
