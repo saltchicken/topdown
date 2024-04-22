@@ -75,9 +75,9 @@ class Event:
                 elif event.type == JOYBUTTONDOWN:
                     # Check if the 'A' button is pressed
                     if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
-                        print("A button pressed on the controller!")
+                        logger.debug("A button pressed on the controller!")
                     elif event.button == 7:
-                        print('Start button: going to scene')
+                        logger.debug('Start button: switching scenes')
                         return True, False
         return True, True
     
