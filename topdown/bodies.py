@@ -1,5 +1,7 @@
 import pygame
 
+from .spritesheet import spritesheet
+
 class Body(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
@@ -31,14 +33,21 @@ class Body(pygame.sprite.Sprite):
 
     def physics(self):
         pass
+    
+    def animate(self):
+        pass
 
     def update(self):
         self.physics()
+        self.animate()
 
 class Player(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
-        self.image.fill((255,0,0))
+        
+        ss = spritesheet.spritesheet('topdown/spritesheet/resources/Attack_1.png')
+        self.image = ss.image_at((0, 0, 128, 128))
+        # self.image.fill((255,0,0))
         self.move_speed = 5
 
         self.input = Input()
