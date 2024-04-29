@@ -1,5 +1,7 @@
 import pygame
 
+from loguru import logger
+
 from .spritesheet import spritesheet, SpriteStripAnim
 
 class Body(pygame.sprite.Sprite):
@@ -47,8 +49,12 @@ class Player(Body):
         # ss = spritesheet('topdown/spritesheet/resources/Attack_1.png')
         # self.image = ss.image_at((0, 0, 128, 128))
         # FPS = 90
-        self.attack_animation = SpriteStripAnim('topdown/spritesheet/resources/Attack_1.png', (0,0,128,128), 4, (0, 0, 0), True, 8)
-        self.idle_animation = SpriteStripAnim('topdown/spritesheet/resources/Idle.png', (0,0,128,128), 7, (0, 0, 0), True, 64)
+        self.attack_animation = SpriteStripAnim('topdown/spritesheet/resources/Attack_1.png', (0,0,128,128), 4, (0, 0, 0), False, 8)
+        self.idle_animation = SpriteStripAnim('topdown/spritesheet/resources/Idle.png', (0,0,128,128), 7, (0, 0, 0), True, 16)
+        
+        self.animation = self.idle_animation
+        
+        self.status = 'idle'
         # sprite_sheet_image = pygame.image.load('topdown/spritesheet/resources/Attack_1.png').convert_alpha()
         # sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
         
@@ -63,7 +69,16 @@ class Player(Body):
         self.y += self.input.y_axis * self.move_speed
         
     def animate(self):
-        self.image = self.idle_animation.next()
+        if self.input.a_button == 1 and self.status == 'idle':
+            self.status = 'attack'
+            self.animation = self.attack_animation
+        try:
+            self.image = self.animation.next()
+        except StopIteration:
+            self.animation.iter()
+            self.idle_animation.iter()
+            self.status = 'idle'
+            self.animation = self.idle_animation
         
     def update(self):
         self.input.update()
@@ -94,7 +109,7 @@ class Input():
         self.x_axis = self.process_axis(self.joystick.get_axis(0))
         self.y_axis = self.process_axis(self.joystick.get_axis(1))
         self.a_button = self.joystick.get_button(0)
-        print(self.a_button)
+        # print(self.a_button)
        
 
     def process_axis(self, value: float):
