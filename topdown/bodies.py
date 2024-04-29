@@ -1,3 +1,4 @@
+import json
 import os
 import pygame
 
@@ -57,12 +58,12 @@ class Player(Body):
         self.y += self.input.y_axis * self.move_speed
           
     def animate(self):
-        if self.input.a_button == 1 and self.state.current_action == self.state.actions['idle_loop']:
+        if self.input.a_button == 1 and self.state.current_action == self.state.actions['idle']:
             self.state.set_action('attack_1')
         try:
             self.image = self.state.current_action.animation.next()
         except StopIteration:
-            self.state.set_action('idle_loop')
+            self.state.set_action('idle')
             
     def update(self):
         self.input.update()
@@ -72,16 +73,20 @@ class Player(Body):
 class Enemy(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
-        self.image.fill((0,255,0))
+        self.state = State('enemy')
+        # self.image.fill((0,255,0))
         self.move_speed = 2
 
     def physics(self):
         self.x += 0.1 * self.move_speed
         self.y += 0.1 * self.move_speed
         
+    def animate(self):
+        self.image = self.state.current_action.animation.next()
+        
     def update(self):
         self.physics()
-        # self.animate()
+        self.animate()
 
 class Input():
     def __init__(self):
@@ -110,19 +115,12 @@ class State:
     def __init__(self, profile):
         self.actions = {}
         directory = 'topdown/spritesheet/assets/'
-        # TODO: Clean this up so its readable
-        for filename in os.listdir(f'{directory}{profile}'):
-            action_name = filename.split('.')[0]
-            print(action_name)
-            if filename.split('.')[0].split('_')[-1] == 'loop':
-                loop = True
-            else:
-                loop = False
-            self.actions[action_name] = Action(f'{directory}{profile}/{filename}', loop)
-        # self.actions['attack_1'] = Action('topdown/spritesheet/assets/player/attack_1.png', False)
-        # self.actions['idle_loop'] = Action('topdown/spritesheet/assets/player/idle.png', True)
-        self.current_action = None
-        self.set_action('idle_loop')
+        for action in os.listdir(f'{directory}{profile}'):
+            with open(f'{directory}{profile}/{action}/{action}.json') as info_file:    
+                action_info = json.load(info_file)
+            self.actions[action] = Action(f'{directory}{profile}/{action}/{action}.png', action_info['loop'], action_info['frames'])
+        # self.current_action = None
+        self.set_action('idle')
         
     def set_action(self, action):
         try:
@@ -137,12 +135,13 @@ class Action():
         # action: str
         sprite_sheet_filepath: str
         # count:int
-        loop:int
+        loop: bool
+        frames: int
         
         def __post_init__(self):
             self.animation = self.load_animation()
         
         def load_animation(self):
             # return SpriteStripAnim(self.sprite_sheet_filepath, (0,0,128,128), self.count, (0, 0, 0), self.loop, 8)
-            return SpriteStripAnim(self.sprite_sheet_filepath, loop=self.loop, frames=8)
+            return SpriteStripAnim(self.sprite_sheet_filepath, loop=self.loop, frames=self.frames)
     

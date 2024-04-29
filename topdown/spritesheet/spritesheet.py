@@ -25,7 +25,7 @@ class spritesheet(object):
             width, height = self.sheet.get_size()
             rect = (0,0, height, height)
             image_count = width // height
-            print(f"rect: {rect}, image_count: {image_count}")
+            # print(f"rect: {rect}, image_count: {image_count}")
         tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
                 for x in range(image_count)]
         return self.images_at(tups, colorkey)
