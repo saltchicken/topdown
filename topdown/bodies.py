@@ -110,6 +110,7 @@ class State:
     def __init__(self, profile):
         self.actions = {}
         directory = 'topdown/spritesheet/assets/'
+        # TODO: Clean this up so its readable
         for filename in os.listdir(f'{directory}{profile}'):
             action_name = filename.split('.')[0]
             print(action_name)
