@@ -18,13 +18,15 @@ class spritesheet(object):
                 colorkey = image.get_at((0,0))
             image.set_colorkey(colorkey, pygame.RLEACCEL)
         return image
-    # Load a whole bunch of images and return them as a list
     def images_at(self, rects, colorkey = None):
         "Loads multiple images, supply a list of coordinates" 
         return [self.image_at(rect, colorkey) for rect in rects]
-    # Load a whole strip of images
-    def load_strip(self, rect, image_count, colorkey = None):
-        "Loads a strip of images and returns them as a list"
+    def load_strip(self, rect = None, image_count = None, colorkey = None):
+        if image_count is None and rect is None:
+            width, height = self.sheet.get_size()
+            rect = (0,0, height, height)
+            image_count = width // height
+            print(f"rect: {rect}, image_count: {image_count}")
         tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
                 for x in range(image_count)]
         return self.images_at(tups, colorkey)
@@ -36,7 +38,7 @@ class SpriteStripAnim(object):
     __add__() method for joining strips which comes in handy when a
     strip wraps to the next row.
     """
-    def __init__(self, filename, rect, count, colorkey=None, loop=False, frames=1):
+    def __init__(self, filename, rect=None, count=None, colorkey=(0, 0, 0), loop=False, frames=1):
         """construct a SpriteStripAnim
         
         filename, rect, count, and colorkey are the same arguments used

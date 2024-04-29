@@ -108,8 +108,8 @@ class Input():
 class State:
     def __init__(self):
         self.actions = {}
-        self.actions['attack'] = Action('attack', 'topdown/spritesheet/resources/Attack_1.png', 4, False)
-        self.actions['idle'] = Action('idle', 'topdown/spritesheet/resources/Idle.png', 7, True)
+        self.actions['attack'] = Action('attack', 'topdown/spritesheet/resources/Attack_1.png', False)
+        self.actions['idle'] = Action('idle', 'topdown/spritesheet/resources/Idle.png', True)
         self.current_action = None
         self.set_action('idle')
         
@@ -125,12 +125,13 @@ class State:
 class Action():
         action: str
         sprite_sheet_filepath: str
-        count:int
+        # count:int
         loop:int
         
         def __post_init__(self):
             self.animation = self.load_animation()
         
         def load_animation(self):
-            return SpriteStripAnim(self.sprite_sheet_filepath, (0,0,128,128), self.count, (0, 0, 0), self.loop, 8)
+            # return SpriteStripAnim(self.sprite_sheet_filepath, (0,0,128,128), self.count, (0, 0, 0), self.loop, 8)
+            return SpriteStripAnim(self.sprite_sheet_filepath, loop=self.loop, frames=8)
     
