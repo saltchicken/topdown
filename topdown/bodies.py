@@ -1,3 +1,4 @@
+import os
 import pygame
 
 from loguru import logger
@@ -47,7 +48,7 @@ class Body(pygame.sprite.Sprite):
 class Player(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
-        self.state = State()
+        self.state = State('player')
         self.move_speed = 5
         self.input = Input()
 
@@ -56,12 +57,12 @@ class Player(Body):
         self.y += self.input.y_axis * self.move_speed
           
     def animate(self):
-        if self.input.a_button == 1 and self.state.current_action == self.state.actions['idle']:
-            self.state.set_action('attack')
+        if self.input.a_button == 1 and self.state.current_action == self.state.actions['idle_loop']:
+            self.state.set_action('attack_1')
         try:
             self.image = self.state.current_action.animation.next()
         except StopIteration:
-            self.state.set_action('idle')
+            self.state.set_action('idle_loop')
             
     def update(self):
         self.input.update()
@@ -106,12 +107,21 @@ class Input():
 
 
 class State:
-    def __init__(self):
+    def __init__(self, profile):
         self.actions = {}
-        self.actions['attack'] = Action('attack', 'topdown/spritesheet/resources/Attack_1.png', False)
-        self.actions['idle'] = Action('idle', 'topdown/spritesheet/resources/Idle.png', True)
+        directory = 'topdown/spritesheet/assets/'
+        for filename in os.listdir(f'{directory}{profile}'):
+            action_name = filename.split('.')[0]
+            print(action_name)
+            if filename.split('.')[0].split('_')[-1] == 'loop':
+                loop = True
+            else:
+                loop = False
+            self.actions[action_name] = Action(f'{directory}{profile}/{filename}', loop)
+        # self.actions['attack_1'] = Action('topdown/spritesheet/assets/player/attack_1.png', False)
+        # self.actions['idle_loop'] = Action('topdown/spritesheet/assets/player/idle.png', True)
         self.current_action = None
-        self.set_action('idle')
+        self.set_action('idle_loop')
         
     def set_action(self, action):
         try:
@@ -123,7 +133,7 @@ class State:
     
 @dataclass
 class Action():
-        action: str
+        # action: str
         sprite_sheet_filepath: str
         # count:int
         loop:int
