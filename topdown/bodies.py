@@ -119,7 +119,10 @@ class State:
             with open(f'{directory}{profile}/{action}/{action}.json') as info_file:    
                 action_info = json.load(info_file)
             self.actions[action] = Action(f'{directory}{profile}/{action}/{action}.png', action_info['loop'], action_info['frames'])
+        if "hitbox" in action_info:
+            print(action_info['hitbox'])
         # self.current_action = None
+        
         self.set_action('idle')
         
     def set_action(self, action):
@@ -127,7 +130,7 @@ class State:
             self.current_action = self.actions[action]
         except KeyError:
             print("Invalid state. State remains the same. Available states are:", list(self.actions.keys()))
-        self.current_action.animation.iter()
+        self.current_action.animation.iter() # Reset the action when switched
         
     
 @dataclass
