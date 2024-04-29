@@ -47,42 +47,27 @@ class Body(pygame.sprite.Sprite):
 class Player(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
-        self.states = {}
-        self.states['attack'] = State('attack', 'topdown/spritesheet/resources/Attack_1.png', 4, False)
-        self.states['idle'] = State('idle', 'topdown/spritesheet/resources/Idle.png', 7, True)
-        self.current_state = None
-        self.set_state('idle')
-
+        self.state = State()
         self.move_speed = 5
-
         self.input = Input()
 
     def physics(self):
         self.x += self.input.x_axis * self.move_speed
         self.y += self.input.y_axis * self.move_speed
-        
-    def set_state(self, state):
-        try:
-            self.current_state = self.states[state]
-        except KeyError:
-            print("Invalid state. State remains the same. Available states are:", list(self.states.keys()))
-        self.current_state.animation.iter()
-        
+          
     def animate(self):
-        if self.input.a_button == 1 and self.current_state == self.states['idle']:
-            self.set_state('attack')
+        if self.input.a_button == 1 and self.state.current_action == self.state.actions['idle']:
+            self.state.set_action('attack')
         try:
-            self.image = self.current_state.animation.next()
+            self.image = self.state.current_action.animation.next()
         except StopIteration:
-            self.set_state('idle')
+            self.state.set_action('idle')
             
-        
     def update(self):
         self.input.update()
         self.physics()
         self.animate()
 
-    
 class Enemy(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
@@ -119,9 +104,26 @@ class Input():
             value = value
         return value
 
+
+class State:
+    def __init__(self):
+        self.actions = {}
+        self.actions['attack'] = Action('attack', 'topdown/spritesheet/resources/Attack_1.png', 4, False)
+        self.actions['idle'] = Action('idle', 'topdown/spritesheet/resources/Idle.png', 7, True)
+        self.current_action = None
+        self.set_action('idle')
+        
+    def set_action(self, action):
+        try:
+            self.current_action = self.actions[action]
+        except KeyError:
+            print("Invalid state. State remains the same. Available states are:", list(self.actions.keys()))
+        self.current_action.animation.iter()
+        
+    
 @dataclass
-class State():
-        state: str
+class Action():
+        action: str
         sprite_sheet_filepath: str
         count:int
         loop:int
