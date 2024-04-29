@@ -2,6 +2,8 @@ import pygame
 
 from loguru import logger
 
+from dataclasses import dataclass
+
 from .spritesheet import spritesheet, SpriteStripAnim
 
 class Body(pygame.sprite.Sprite):
@@ -48,22 +50,9 @@ class Player(Body):
         self.states = {}
         self.states['attack'] = State('attack', 'topdown/spritesheet/resources/Attack_1.png', 4, False)
         self.states['idle'] = State('idle', 'topdown/spritesheet/resources/Idle.png', 7, True)
-        self.current_state = 'idle'
-        
-        # ss = spritesheet('topdown/spritesheet/resources/Attack_1.png')
-        # self.image = ss.image_at((0, 0, 128, 128))
-        # FPS = 90
-        # self.attack_animation = 
-        # self.idle_animation = SpriteStripAnim('topdown/spritesheet/resources/Idle.png', (0,0,128,128), 7, (0, 0, 0), True, 16)
-        
-        # self.animation = self.idle_animation
-        
-        # self.status = 'idle'
-        # sprite_sheet_image = pygame.image.load('topdown/spritesheet/resources/Attack_1.png').convert_alpha()
-        # sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
-        
-        # self.image = sprite_sheet.get_image(0, 128, 128, 1, (100,0,0))
-        # self.image.fill((255,0,0))
+        self.current_state = None
+        self.set_state('idle')
+
         self.move_speed = 5
 
         self.input = Input()
@@ -72,15 +61,21 @@ class Player(Body):
         self.x += self.input.x_axis * self.move_speed
         self.y += self.input.y_axis * self.move_speed
         
-    def animate(self):
-        if self.input.a_button == 1 and self.current_state == 'idle':
-            self.current_state = 'attack'
+    def set_state(self, state):
         try:
-            self.image = self.states[self.current_state].animation.next()
+            self.current_state = self.states[state]
+        except KeyError:
+            print("Invalid state. State remains the same. Available states are:", list(self.states.keys()))
+        self.current_state.animation.iter()
+        
+    def animate(self):
+        if self.input.a_button == 1 and self.current_state == self.states['idle']:
+            self.set_state('attack')
+        try:
+            self.image = self.current_state.animation.next()
         except StopIteration:
-            self.states[self.current_state].animation.iter()
-            self.current_state = 'idle'
-            self.states[self.current_state].animation.iter()
+            self.set_state('idle')
+            
         
     def update(self):
         self.input.update()
@@ -123,15 +118,17 @@ class Input():
         else:
             value = value
         return value
-    
+
+@dataclass
 class State():
-    def __init__(self, state, sprite_sheet_filepath, count, loop):
-        self.state = state
-        self.sprite_sheet_filepath = sprite_sheet_filepath
-        self.count = count
-        self.loop = loop
-        self.animation = self.load_animation()
+        state: str
+        sprite_sheet_filepath: str
+        count:int
+        loop:int
         
-    def load_animation(self):
-        return SpriteStripAnim(self.sprite_sheet_filepath, (0,0,128,128), self.count, (0, 0, 0), self.loop, 8)
+        def __post_init__(self):
+            self.animation = self.load_animation()
+        
+        def load_animation(self):
+            return SpriteStripAnim(self.sprite_sheet_filepath, (0,0,128,128), self.count, (0, 0, 0), self.loop, 8)
     
