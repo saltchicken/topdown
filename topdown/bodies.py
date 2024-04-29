@@ -1,11 +1,11 @@
 import pygame
 
-from .spritesheet import spritesheet
+from .spritesheet import spritesheet, SpriteStripAnim
 
 class Body(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
-        self.WIDTH, self.HEIGHT = 50, 50
+        self.WIDTH, self.HEIGHT = 128, 128 
         self.image = pygame.Surface((self.WIDTH, self.HEIGHT))
         self.rect = self.image.get_rect()
         self._x = float(self.WIDTH / 2) + float(position[0])
@@ -38,24 +38,37 @@ class Body(pygame.sprite.Sprite):
         pass
 
     def update(self):
-        self.physics()
-        self.animate()
+        pass
 
 class Player(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         
-        ss = spritesheet.spritesheet('topdown/spritesheet/resources/Attack_1.png')
-        self.image = ss.image_at((0, 0, 128, 128))
+        # ss = spritesheet('topdown/spritesheet/resources/Attack_1.png')
+        # self.image = ss.image_at((0, 0, 128, 128))
+        # FPS = 90
+        self.attack_animation = SpriteStripAnim('topdown/spritesheet/resources/Attack_1.png', (0,0,128,128), 4, (0, 0, 0), True, 8)
+        self.idle_animation = SpriteStripAnim('topdown/spritesheet/resources/Idle.png', (0,0,128,128), 7, (0, 0, 0), True, 64)
+        # sprite_sheet_image = pygame.image.load('topdown/spritesheet/resources/Attack_1.png').convert_alpha()
+        # sprite_sheet = spritesheet.SpriteSheet(sprite_sheet_image)
+        
+        # self.image = sprite_sheet.get_image(0, 128, 128, 1, (100,0,0))
         # self.image.fill((255,0,0))
         self.move_speed = 5
 
         self.input = Input()
 
     def physics(self):
-        self.input.update()
         self.x += self.input.x_axis * self.move_speed
         self.y += self.input.y_axis * self.move_speed
+        
+    def animate(self):
+        self.image = self.idle_animation.next()
+        
+    def update(self):
+        self.input.update()
+        self.physics()
+        self.animate()
 
     
 class Enemy(Body):
@@ -67,6 +80,10 @@ class Enemy(Body):
     def physics(self):
         self.x += 0.1 * self.move_speed
         self.y += 0.1 * self.move_speed
+        
+    def update(self):
+        self.physics()
+        # self.animate()
 
 class Input():
     def __init__(self):
@@ -76,6 +93,9 @@ class Input():
     def update(self):
         self.x_axis = self.process_axis(self.joystick.get_axis(0))
         self.y_axis = self.process_axis(self.joystick.get_axis(1))
+        self.a_button = self.joystick.get_button(0)
+        print(self.a_button)
+       
 
     def process_axis(self, value: float):
         value = round(value, 1)

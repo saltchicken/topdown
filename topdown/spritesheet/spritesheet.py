@@ -3,7 +3,7 @@ import pygame
 class spritesheet(object):
     def __init__(self, filename):
         try:
-            self.sheet = pygame.image.load(filename).convert()
+            self.sheet = pygame.image.load(filename).convert_alpha()
         except pygame.error as message:
             print('Unable to load spritesheet image:', filename)
             raise message
@@ -49,7 +49,7 @@ class SpriteStripAnim(object):
         the iterator advances to the next image.
         """
         self.filename = filename
-        ss = spritesheet.spritesheet(filename)
+        ss = spritesheet(filename)
         self.images = ss.load_strip(rect, count, colorkey)
         self.i = 0
         self.loop = loop
