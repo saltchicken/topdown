@@ -49,6 +49,7 @@ class SpriteStripAnim(object):
         self.f = frames
     def iter(self):
         self.i = 0
+        self.frame_i = 0
         self.f = self.frames
         return self
     def next(self):
