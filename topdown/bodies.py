@@ -51,10 +51,17 @@ class Body(pygame.sprite.Sprite):
         self.animate()
     
     def get_hitbox(self):
-        return pygame.Rect( self.rect.x + self.state.offset_rect[0],
-                            self.rect.y + self.state.offset_rect[1],
-                            self.state.offset_rect[2],
-                            self.state.offset_rect[3])
+        action_frame = self.state.current_action.animation.frame_i
+        if action_frame >= self.state.current_action.animation.count:
+            logger.warning('animation.i is greater than count, why is this happening')
+            return pygame.Rect( self.rect.x + self.state.current_action.hitbox[-1][0],
+                            self.rect.y + self.state.current_action.hitbox[-1][1],
+                            self.state.current_action.hitbox[-1][2],
+                            self.state.current_action.hitbox[-1][3])
+        return pygame.Rect( self.rect.x + self.state.current_action.hitbox[action_frame][0],
+                            self.rect.y + self.state.current_action.hitbox[action_frame][1],
+                            self.state.current_action.hitbox[action_frame][2],
+                            self.state.current_action.hitbox[action_frame][3])
         
     def draw_hitbox(self, screen):
         pygame.draw.rect(screen, (255,255,255), self.hitbox, 1)
@@ -77,6 +84,7 @@ class Player(Body):
             self.image = self.state.current_action.animation.next()
         except StopIteration:
             self.state.set_action('idle')
+            # self.image = self.state.current_action.animation.next()
             
     def update(self):
         self.input.update()
@@ -128,17 +136,16 @@ class State:
         for action in os.listdir(f'{directory}{profile}'):
             with open(f'{directory}{profile}/{action}/{action}.json') as info_file:    
                 action_info = json.load(info_file)
-            self.actions[action] = Action(action_info['width'], 
-                                          action_info['height'], 
-                                          f'{directory}{profile}/{action}/{action}.png', 
-                                          action_info['count'], 
-                                          action_info['loop'], 
-                                          action_info['frames']
-                                          )
-        if "hitbox" in action_info:
-            # print(action_info['hitbox'])
-            self.offset_rect = tuple(action_info['hitbox'])
-        # self.current_action = None
+            self.actions[action] = Action(  action_info['width'], 
+                                            action_info['height'], 
+                                            f'{directory}{profile}/{action}/{action}.png', 
+                                            action_info['count'], 
+                                            action_info['loop'], 
+                                            action_info['frames'],
+                                            action_info['hitbox']
+                                         )
+        # self.offset_rect = action_info['hitbox']
+
         
         self.set_action('idle')
         
@@ -159,6 +166,7 @@ class Action():
         count:int
         loop: bool
         frames: int
+        hitbox: list
         
         def __post_init__(self):
             self.animation = self.load_animation()

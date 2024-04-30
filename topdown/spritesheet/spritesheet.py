@@ -40,7 +40,10 @@ class SpriteStripAnim(object):
         self.filename = filename
         ss = spritesheet(filename)
         self.images = ss.load_strip(rect, count, colorkey)
+        self.count = count
         self.i = 0
+        # TODO: Remove need for frame_i, very ugly. Using just i iterates just above len on StopIteration. Should be a better way to do this.
+        self.frame_i = 0
         self.loop = loop
         self.frames = frames
         self.f = frames
@@ -58,7 +61,10 @@ class SpriteStripAnim(object):
         self.f -= 1
         if self.f == 0:
             self.i += 1
+            self.frame_i += 1
             self.f = self.frames
+        if self.frame_i >= len(self.images):
+            self.frame_i -= 1
         return image
     def __add__(self, ss):
         self.images.extend(ss.images)
