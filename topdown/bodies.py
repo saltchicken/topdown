@@ -105,6 +105,7 @@ class Enemy(Body):
         
     def animate(self):
         self.image = self.state.current_action.animation.next()
+        # self.image = pygame.transform.flip(self.image, True, False)
 
 class Input():
     def __init__(self):
