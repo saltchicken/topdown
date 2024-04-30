@@ -62,7 +62,6 @@ class Scene():
         running = self.event.update()
         self.screen.fill(self.background)
         self.all_sprites.update()
-                    
         self.all_sprites.draw(self.screen)
         
         self.collisions()
