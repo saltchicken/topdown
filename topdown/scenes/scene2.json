@@ -1,0 +1,8 @@
+{
+    "player": [
+        {"position": [100, 100]}
+    ],
+    "enemies": [
+        {"position": [500, 100]}
+    ]
+}

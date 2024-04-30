@@ -24,7 +24,7 @@ class Topdown:
         pygame.display.set_caption("Topdown")
 
         # self.scene = Scene(self.screen)
-        self.scene = Scene.from_config(Path('topdown/scenes/scene1.json'), self.screen)
+        self.scene = Scene.from_config(Path('topdown/scenes/scene2.json'), self.screen)
         self.menu = Scene(self.screen)
         self.clock = pygame.time.Clock()
 
@@ -76,8 +76,11 @@ class Scene():
             for enemy in self.enemies:
                 collision = player.hitbox.colliderect(enemy.hitbox)
                 enemy.draw_hitbox(self.screen)
-                if collision:
-                    logger.debug(collision)
+                if collision: self.handle_collisions(player, enemy)
+                    
+    def handle_collisions(self, player, enemy):
+        logger.debug(f"Player {player} collided with Enemy {enemy}")
+        
     
     @classmethod
     def from_config(cls, config_file, screen):
