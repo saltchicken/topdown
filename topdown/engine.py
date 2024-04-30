@@ -25,7 +25,7 @@ class Topdown:
 
         # self.scene = Scene(self.screen)
         self.scenes = {}
-        self.scenes['scene2'] = Scene.from_config(Path('topdown/scenes/scene2.json'), self.screen)
+        self.scenes['scene'] = Scene.from_config(Path('topdown/scenes/scene2.json'), self.screen)
         self.scenes['menu'] = Scene(self.screen)
         self.set_scene('menu')
         self.clock = pygame.time.Clock()
@@ -58,7 +58,7 @@ class Topdown:
                         if self.current_scene != self.scenes['menu']:
                             self.current_scene = self.scenes['menu']
                         else:
-                            self.current_scene = self.scenes['scene2']
+                            self.current_scene = self.scenes['scene']
 
     def exit(self):
         pygame.quit()
