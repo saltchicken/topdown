@@ -57,6 +57,7 @@ class SpriteStripAnim(object):
                 raise StopIteration
             else:
                 self.i = 0
+                self.frame_i = 0
         image = self.images[self.i]
         self.f -= 1
         if self.f == 0:
