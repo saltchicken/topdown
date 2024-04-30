@@ -83,9 +83,6 @@ class Scene():
         
         pygame.display.flip()
 
-
-        
-    
     def collisions(self):
         # TODO: Why are two collisions detected at start
         for player in self.players:
@@ -98,7 +95,6 @@ class Scene():
     def handle_collisions(self, player, enemy):
         logger.debug(f"Player {player} collided with Enemy {enemy}")
         
-    
     @classmethod
     def from_config(cls, config_file, screen):
         scene = cls(screen)
@@ -112,5 +108,4 @@ class Scene():
                 player = Player(position = player_config['position'])
                 scene.all_sprites.add(player)
                 scene.players.add(player)
-            
         return scene    
