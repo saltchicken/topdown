@@ -128,7 +128,13 @@ class State:
         for action in os.listdir(f'{directory}{profile}'):
             with open(f'{directory}{profile}/{action}/{action}.json') as info_file:    
                 action_info = json.load(info_file)
-            self.actions[action] = Action(f'{directory}{profile}/{action}/{action}.png', action_info['loop'], action_info['frames'])
+            self.actions[action] = Action(action_info['width'], 
+                                          action_info['height'], 
+                                          f'{directory}{profile}/{action}/{action}.png', 
+                                          action_info['count'], 
+                                          action_info['loop'], 
+                                          action_info['frames']
+                                          )
         if "hitbox" in action_info:
             # print(action_info['hitbox'])
             self.offset_rect = tuple(action_info['hitbox'])
@@ -147,8 +153,10 @@ class State:
 @dataclass
 class Action():
         # action: str
+        width: int
+        height: int
         sprite_sheet_filepath: str
-        # count:int
+        count:int
         loop: bool
         frames: int
         
@@ -157,5 +165,5 @@ class Action():
         
         def load_animation(self):
             # return SpriteStripAnim(self.sprite_sheet_filepath, (0,0,128,128), self.count, (0, 0, 0), self.loop, 8)
-            return SpriteStripAnim(self.sprite_sheet_filepath, loop=self.loop, frames=self.frames)
+            return SpriteStripAnim(self.sprite_sheet_filepath, rect=(0,0,self.width, self.height), count=self.count, loop=self.loop, frames=self.frames)
     

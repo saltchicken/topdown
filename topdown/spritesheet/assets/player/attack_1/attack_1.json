@@ -1,4 +1,8 @@
 {
+    "width": 128,
+    "height": 128,
+    "count": 4,
     "frames": 8,
-    "loop": false
+    "loop": false,
+    "hitbox": [0, 0, 128, 128]
 }

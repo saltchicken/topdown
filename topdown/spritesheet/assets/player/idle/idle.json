@@ -1,4 +1,7 @@
 {
+    "width": 128,
+    "height": 128,
+    "count": 7,
     "frames": 32,
     "loop": true,
     "hitbox": [30, 54, 40, 74]

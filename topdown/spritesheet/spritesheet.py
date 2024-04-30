@@ -20,11 +20,11 @@ class spritesheet(object):
     def images_at(self, rects, colorkey = None):
         "Loads multiple images, supply a list of coordinates" 
         return [self.image_at(rect, colorkey) for rect in rects]
-    def load_strip(self, rect = None, image_count = None, colorkey = None):
-        if image_count is None and rect is None:
-            width, height = self.sheet.get_size()
-            rect = (0,0, height, height)
-            image_count = width // height
+    def load_strip(self, rect, image_count, colorkey = None):
+        # if image_count is None and rect is None:
+        #     width, height = self.sheet.get_size()
+        #     rect = (0,0, height, height)
+        #     image_count = width // height
             # print(f"rect: {rect}, image_count: {image_count}")
         tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
                 for x in range(image_count)]
@@ -36,7 +36,7 @@ class SpriteStripAnim(object):
     __add__() method for joining strips which comes in handy when a
     strip wraps to the next row.
     """
-    def __init__(self, filename, rect=None, count=None, colorkey=(0, 0, 0), loop=False, frames=1):
+    def __init__(self, filename, rect, count, colorkey=(0, 0, 0), loop=False, frames=1):
         self.filename = filename
         ss = spritesheet(filename)
         self.images = ss.load_strip(rect, count, colorkey)
