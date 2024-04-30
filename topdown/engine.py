@@ -24,24 +24,41 @@ class Topdown:
         pygame.display.set_caption("Topdown")
 
         # self.scene = Scene(self.screen)
-        self.scene = Scene.from_config(Path('topdown/scenes/scene2.json'), self.screen)
-        self.menu = Scene(self.screen)
+        self.scenes = {}
+        self.scenes['scene2'] = Scene.from_config(Path('topdown/scenes/scene2.json'), self.screen)
+        self.scenes['menu'] = Scene(self.screen)
+        self.set_scene('menu')
         self.clock = pygame.time.Clock()
 
     def loop(self):
-        # TODO: Fix this message with self.running. Shouldn't be needed.
         self.running = True
-        self.switch = True
         while self.running:
-            self.switch = True
-            while self.switch and self.running:
-                self.running, self.switch = self.menu.update()
-                self.clock.tick(90)
-            self.switch = True
-            while self.switch and self.running:
-                self.running, self.switch = self.scene.update()
-                self.clock.tick(90)
+            self.handle_events()
+            self.current_scene.update()
+            self.clock.tick(90)
         self.exit()
+        
+    def set_scene(self, scene):
+        try:
+            self.current_scene = self.scenes[scene]
+        except KeyError:
+            print("Invalid state. State remains the same. Available scenes are:", list(self.scenes.keys()))
+            
+    def handle_events(self):
+        for event in pygame.event.get():
+                if event.type == QUIT:
+                    self.running = False
+                elif event.type == JOYBUTTONDOWN:
+                    # Check if the 'A' button is pressed
+                    if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
+                        # logger.debug("A button pressed on the controller!")
+                        pass
+                    elif event.button == 7:
+                        logger.debug('Start button: switching scenes')
+                        if self.current_scene != self.scenes['menu']:
+                            self.current_scene = self.scenes['menu']
+                        else:
+                            self.current_scene = self.scenes['scene2']
 
     def exit(self):
         pygame.quit()
@@ -53,13 +70,11 @@ class Scene():
     def __init__(self, screen):
         self.screen = screen
         self.background = (40, 40, 40)
-        self.event = Event()
         self.all_sprites = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
 
     def update(self):
-        running = self.event.update()
         self.screen.fill(self.background)
         self.all_sprites.update()
         self.all_sprites.draw(self.screen)
@@ -67,7 +82,9 @@ class Scene():
         self.collisions()
         
         pygame.display.flip()
-        return running
+
+
+        
     
     def collisions(self):
         # TODO: Why are two collisions detected at start
@@ -96,22 +113,4 @@ class Scene():
                 scene.all_sprites.add(player)
                 scene.players.add(player)
             
-        return scene
-    
-class Event:
-    def __init__(self):
-        pass
-    def update(self):
-        for event in pygame.event.get():
-                if event.type == QUIT:
-                    return False, False
-                elif event.type == JOYBUTTONDOWN:
-                    # Check if the 'A' button is pressed
-                    if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
-                        # logger.debug("A button pressed on the controller!")
-                        pass
-                    elif event.button == 7:
-                        logger.debug('Start button: switching scenes')
-                        return True, False
-        return True, True
-    
+        return scene    
