@@ -16,6 +16,8 @@ class Body(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self._x = float(self.WIDTH / 2) + float(position[0])
         self._y = float(self.HEIGHT / 2) + float(position[1])
+        
+        self.hitbox = None
 
     @property
     def x(self):
@@ -44,7 +46,15 @@ class Body(pygame.sprite.Sprite):
         pass
 
     def update(self):
-        pass
+        self.hitbox = self.get_hitbox()
+        self.physics()
+        self.animate()
+    
+    def get_hitbox(self):
+        return pygame.Rect( self.rect.x + self.state.offset_rect[0],
+                            self.rect.y + self.state.offset_rect[1],
+                            self.state.offset_rect[2],
+                            self.state.offset_rect[3])
 
 class Player(Body):
     def __init__(self, *args, **kwargs):
@@ -67,8 +77,9 @@ class Player(Body):
             
     def update(self):
         self.input.update()
-        self.physics()
-        self.animate()
+        super().update()
+        
+        
 
 class Enemy(Body):
     def __init__(self, *args, **kwargs):
@@ -83,10 +94,6 @@ class Enemy(Body):
         
     def animate(self):
         self.image = self.state.current_action.animation.next()
-        
-    def update(self):
-        self.physics()
-        self.animate()
 
 class Input():
     def __init__(self):
@@ -120,7 +127,8 @@ class State:
                 action_info = json.load(info_file)
             self.actions[action] = Action(f'{directory}{profile}/{action}/{action}.png', action_info['loop'], action_info['frames'])
         if "hitbox" in action_info:
-            print(action_info['hitbox'])
+            # print(action_info['hitbox'])
+            self.offset_rect = tuple(action_info['hitbox'])
         # self.current_action = None
         
         self.set_action('idle')

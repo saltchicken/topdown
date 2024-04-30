@@ -1,4 +1,5 @@
 {
     "frames": 32,
-    "loop": true
+    "loop": true,
+    "hitbox": [30, 54, 40, 74]
 }

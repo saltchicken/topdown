@@ -1,5 +1,5 @@
 {
     "frames": 32,
     "loop": true,
-    "hitbox": [32, 32, 64, 64]
+    "hitbox": [30, 54, 40, 74]
 }

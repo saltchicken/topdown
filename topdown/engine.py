@@ -62,17 +62,23 @@ class Scene():
         running = self.event.update()
         self.screen.fill(self.background)
         self.all_sprites.update()
-
-        # Get collisions between players and enemies
-        for player in self.players:
-            collisions = pygame.sprite.spritecollide(player, self.enemies, False)
-            if collisions:
-                for collision in collisions:
-                    logger.debug(collision)
                     
         self.all_sprites.draw(self.screen)
+        
+        self.collisions()
+        
         pygame.display.flip()
         return running
+    
+    def collisions(self):
+        # TODO: Why are two collisions detected at start
+        for player in self.players:
+            pygame.draw.rect(self.screen, (255,255,255), player.hitbox, 1)
+            for enemy in self.enemies:
+                collision = player.hitbox.colliderect(enemy.hitbox)
+                pygame.draw.rect(self.screen, (255,255,255), enemy.hitbox, 1)
+                if collision:
+                    logger.debug(collision)
     
     @classmethod
     def from_config(cls, config_file, screen):
