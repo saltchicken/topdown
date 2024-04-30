@@ -55,6 +55,9 @@ class Body(pygame.sprite.Sprite):
                             self.rect.y + self.state.offset_rect[1],
                             self.state.offset_rect[2],
                             self.state.offset_rect[3])
+        
+    def draw_hitbox(self, screen):
+        pygame.draw.rect(screen, (255,255,255), self.hitbox, 1)
 
 class Player(Body):
     def __init__(self, *args, **kwargs):
