@@ -10,26 +10,24 @@ from .bodies import Player, Enemy
 class Topdown:
     def __init__(self):
         pygame.init()
-        
-        # For specific window size
-        self.WIDTH, self.HEIGHT = 1200, 900
-        self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        
-        # # For fullscreen
-        # info = pygame.display.Info()
-        # monitor_width = info.current_w
-        # monitor_height = info.current_h
-        # self.screen = pygame.display.set_mode((monitor_width, monitor_height), pygame.FULLSCREEN)
-
+        self.set_screen_size(1200, 900)
+        # self.set_screen_size(fullscreen=True)
         pygame.display.set_caption("Topdown")
-
-        # self.scene = Scene(self.screen)
         self.scenes = {}
         self.scenes['scene'] = Scene.from_config(Path('topdown/scenes/scene2.json'), self.screen)
         self.scenes['menu'] = Scene(self.screen)
         self.set_scene('menu')
         self.clock = pygame.time.Clock()
-
+        
+    def set_screen_size(self, width=None, height=None, fullscreen=False):
+        if fullscreen or width == None or height == None:
+            info = pygame.display.Info()
+            self.WIDTH, self.HEIGHT = info.current_w, info.current_h
+            self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.FULLSCREEN)
+        else:
+            self.WIDTH, self.HEIGHT = width, height
+            self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
+        
     def loop(self):
         self.running = True
         while self.running:
