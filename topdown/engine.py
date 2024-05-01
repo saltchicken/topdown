@@ -19,6 +19,14 @@ class Topdown:
         self.set_scene('menu')
         self.clock = pygame.time.Clock()
         
+    def loop(self):
+        self.running = True
+        while self.running:
+            self.handle_events()
+            self.current_scene.update()
+            self.clock.tick(90)
+        self.exit()
+        
     def set_screen_size(self, width=None, height=None, fullscreen=False):
         if fullscreen or width == None or height == None:
             info = pygame.display.Info()
@@ -27,14 +35,6 @@ class Topdown:
         else:
             self.WIDTH, self.HEIGHT = width, height
             self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        
-    def loop(self):
-        self.running = True
-        while self.running:
-            self.handle_events()
-            self.current_scene.update()
-            self.clock.tick(90)
-        self.exit()
         
     def set_scene(self, scene):
         try:
