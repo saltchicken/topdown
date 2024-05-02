@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 from loguru import logger
 
-from .bodies import Player, Enemy
+from ..bodies.bodies import Player, Enemy
 
 class Topdown:
     def __init__(self):

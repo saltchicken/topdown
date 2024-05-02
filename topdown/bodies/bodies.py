@@ -143,7 +143,7 @@ class Input():
 class State:
     def __init__(self, profile):
         self.actions = {}
-        directory = 'topdown/spritesheet/assets/'
+        directory = 'topdown/bodies/assets/'
         for action in os.listdir(f'{directory}{profile}'):
             with open(f'{directory}{profile}/{action}/{action}.json') as info_file:    
                 action_info = json.load(info_file)
