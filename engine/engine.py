@@ -1,13 +1,10 @@
 import pygame
 from pygame.locals import QUIT, JOYBUTTONDOWN
-import json
 
 from pathlib import Path
 from loguru import logger
 
 from scenes.scenes import Scene
-
-from bodies.bodies import Player, Enemy
 
 class Topdown:
     def __init__(self):
