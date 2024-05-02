@@ -46,9 +46,9 @@ class Body(pygame.sprite.Sprite):
         pass
 
     def update(self):
-        self.hitbox = self.get_hitbox()
         self.physics()
         self.animate()
+        self.hitbox = self.get_hitbox()
     
     def get_hitbox(self):
         action_frame = self.state.current_action.animation.frame_i
