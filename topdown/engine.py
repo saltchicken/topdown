@@ -66,14 +66,18 @@ class Topdown:
 
 class Scene():
     def __init__(self, screen):
+        info = pygame.display.Info()
+        self.WIDTH, self.HEIGHT = info.current_w, info.current_h
         self.screen = screen
         self.background = (40, 40, 40)
         self.all_sprites = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
+        self.tile = pygame.image.load('topdown/scenes/assets/grass.png')
 
     def update(self):
-        self.screen.fill(self.background)
+        # self.screen.fill(self.background)
+        self.draw_tiles()
         self.all_sprites.update()
         self.all_sprites.draw(self.screen)
         
@@ -92,6 +96,12 @@ class Scene():
                     
     def handle_collisions(self, player, enemy):
         logger.debug(f"Player {player} collided with Enemy {enemy}")
+        
+    def draw_tiles(self):
+        for y in range(0, self.HEIGHT, 64):
+            for x in range(0, self.WIDTH, 64):
+                self.screen.blit(self.tile, (x, y))
+        
         
     @classmethod
     def from_config(cls, config_file, screen):
