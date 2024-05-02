@@ -70,7 +70,7 @@ class Player(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.state = State('player2')
-        self.move_speed = 5
+        self.move_speed = 3
         self.input = Input()
 
     def physics(self):
@@ -78,13 +78,23 @@ class Player(Body):
         self.y += self.input.y_axis * self.move_speed
           
     def animate(self):
-        if self.input.a_button == 1 and self.state.current_action == self.state.actions['idle']:
-            self.state.set_action('attack_1')
+        # if self.input.a_button == 1 and self.state.current_action == self.state.actions['idle']:
+        #     self.state.set_action('attack_1')
         try:
             self.image = self.state.current_action.animation.next()
         except StopIteration:
             self.state.set_action('idle')
-            # self.image = self.state.current_action.animation.next()
+            self.image = self.state.current_action.animation.next()
+        if self.input.x_axis == 0 and self.input.y_axis == 0 and self.state.current_action != self.state.actions['idle']:
+            self.state.set_action('idle')
+        elif self.input.x_axis > 0 and self.state.current_action != self.state.actions['RSS'] and abs(self.input.x_axis) > abs(self.input.y_axis):
+            self.state.set_action('RSS')
+        elif self.input.x_axis < 0 and self.state.current_action != self.state.actions['LSS'] and abs(self.input.x_axis) > abs(self.input.y_axis):
+            self.state.set_action('LSS')
+        elif self.input.y_axis < 0 and self.state.current_action != self.state.actions['BSS'] and abs(self.input.y_axis) > abs(self.input.x_axis):
+            self.state.set_action('BSS')
+        elif self.input.y_axis > 0 and self.state.current_action != self.state.actions['FSS'] and abs(self.input.y_axis) > abs(self.input.x_axis):
+            self.state.set_action('FSS')
             
     def update(self):
         self.input.update()
