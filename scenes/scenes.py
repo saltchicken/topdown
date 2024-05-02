@@ -2,7 +2,7 @@ import json
 from loguru import logger
 import pygame
 
-from topdown.bodies.bodies import Enemy, Player
+from bodies.bodies import Enemy, Player
 
 
 class Scene():
@@ -14,7 +14,7 @@ class Scene():
         self.all_sprites = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
-        self.tile = pygame.image.load('topdown/scenes/assets/grass.png')
+        self.tile = pygame.image.load('scenes/assets/grass.png')
 
     def update(self):
         # self.screen.fill(self.background)
