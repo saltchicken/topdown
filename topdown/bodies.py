@@ -69,7 +69,7 @@ class Body(pygame.sprite.Sprite):
 class Player(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
-        self.state = State('player')
+        self.state = State('player2')
         self.move_speed = 5
         self.input = Input()
 
