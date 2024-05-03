@@ -14,8 +14,8 @@ class TextureMaster():
         self.textures = {}
         directory = 'textures/assets/'
         for texture in os.listdir(f'{directory}{profile}'):
-            texture_name = os.path.splitext(os.path.basename(texture))[0]
-            self.textures[texture_name] = Texture(f'{directory}{profile}/{texture}')
+            # texture_name = os.path.splitext(os.path.basename(texture))[0]
+            self.textures[texture] = Texture(f'{directory}{profile}/{texture}/{texture}.png')
             
     def draw_tile(self, screen, texture_name, x, y):
         try:
