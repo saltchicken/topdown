@@ -1,10 +1,16 @@
 import os
 import pygame
+import json
 
 class Texture():
     def __init__(self, texture_file_path):
         self.texture_file_path = texture_file_path
-        self.texture = pygame.image.load(texture_file_path)
+        texture_name = os.path.splitext(os.path.basename(self.texture_file_path))[0]
+        self.texture = pygame.image.load(f'{self.texture_file_path}/{texture_name}.png')
+        
+        with open(f'{self.texture_file_path}/{texture_name}.json') as info_file:    
+            self.info = json.load(info_file)
+            
     def draw(self, screen, xy):
         screen.blit(self.texture, (xy[0], xy[1]))
         
@@ -14,8 +20,7 @@ class TextureMaster():
         self.textures = {}
         directory = 'textures/assets/'
         for texture in os.listdir(f'{directory}{profile}'):
-            # texture_name = os.path.splitext(os.path.basename(texture))[0]
-            self.textures[texture] = Texture(f'{directory}{profile}/{texture}/{texture}.png')
+            self.textures[texture] = Texture(f'{directory}{profile}/{texture}')
             
     def draw_tile(self, screen, texture_name, x, y):
         try:
