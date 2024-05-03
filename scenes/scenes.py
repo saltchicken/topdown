@@ -3,6 +3,7 @@ from loguru import logger
 import pygame
 
 from bodies.bodies import Enemy, Player
+from textures.textures import TextureMaster
 
 
 class Scene():
@@ -14,11 +15,12 @@ class Scene():
         self.all_sprites = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
-        self.tile = pygame.image.load('textures/assets/grass.png')
+        self.texture = TextureMaster()
 
     def update(self):
         # self.screen.fill(self.background)
-        self.draw_tiles()
+        # self.texture.draw_tiles(self.screen, 'grass', 2, 3)
+        self.texture.fill_screen_tile(self.screen, 'grass')
         self.all_sprites.update()
         self.all_sprites.draw(self.screen)
         
@@ -37,12 +39,6 @@ class Scene():
                     
     def handle_collisions(self, player, enemy):
         logger.debug(f"Player {player} collided with Enemy {enemy}")
-        
-    def draw_tiles(self):
-        for y in range(0, self.HEIGHT, 64):
-            for x in range(0, self.WIDTH, 64):
-                self.screen.blit(self.tile, (x, y))
-        
         
     @classmethod
     def from_config(cls, config_file, screen):
