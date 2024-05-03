@@ -81,10 +81,17 @@ class Player(Body):
         try:
             self.image = self.state.current_action.animation.next()
         except StopIteration:
-            self.state.set_action('idle')
+            self.state.set_action('FSS_idle')
             self.image = self.state.current_action.animation.next()
-        if self.input.x_axis == 0 and self.input.y_axis == 0 and self.state.current_action != self.state.actions['idle']:
-            self.state.set_action('idle')
+        if self.input.x_axis == 0 and self.input.y_axis == 0 and self.state.current_action != self.state.actions['FSS_idle']:
+            if self.state.current_action == self.state.actions['FSS']:
+                self.state.set_action('FSS_idle')
+            elif self.state.current_action == self.state.actions['BSS']:
+                self.state.set_action('BSS_idle')
+            elif self.state.current_action == self.state.actions['LSS']:
+                self.state.set_action('LSS_idle')
+            elif self.state.current_action == self.state.actions['RSS']:
+                self.state.set_action('RSS_idle')
         elif self.input.x_axis > 0 and self.state.current_action != self.state.actions['RSS'] and abs(self.input.x_axis) > abs(self.input.y_axis):
             self.state.set_action('RSS')
         elif self.input.x_axis < 0 and self.state.current_action != self.state.actions['LSS'] and abs(self.input.x_axis) > abs(self.input.y_axis):
@@ -129,9 +136,9 @@ class Input():
 
     def process_axis(self, value: float):
         value = round(value, 1)
-        if value <= 0.1 and value >= 0.0:
+        if value <= 0.55 and value >= 0.0:
             value = 0.0
-        elif value >= -0.1 and value < 0.0:
+        elif value >= -0.55 and value < 0.0:
             value = 0.0
         else:
             value = value
@@ -156,7 +163,7 @@ class State:
         # self.offset_rect = action_info['hitbox']
 
         
-        self.set_action('idle')
+        self.set_action('FSS_idle')
         
     def set_action(self, action):
         try:
