@@ -16,9 +16,10 @@ class Body(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self._x = float(self.WIDTH / 2) + float(position[0])
         self._y = float(self.HEIGHT / 2) + float(position[1])
-        self.grid_x = int(self._x // GRID)
-        
+        # TODO: Some sort of grid offset is needed for x but in both directions. Address interacting with a side square
+        self.grid_x_offset = 0
         self.grid_y_offset = 0
+        self.grid_x = int(self._x // GRID)
         self.grid_y = int((self._y + self.grid_y_offset) // GRID)
         
         self.hitbox = None
