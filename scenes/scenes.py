@@ -21,9 +21,9 @@ class Scene():
         self.map = None
         
         # TODO: Clean this up for dealing with where center of camera is
-        # self.map_center = (11, 9)
-        # self.row_length = 20
-        # self.col_length = 16
+        self.map_center = (11, 9)
+        self.row_length = 22
+        self.col_length = 18
         
         self.x_offset = 0.0
         self.y_offset = 0.0
@@ -37,14 +37,7 @@ class Scene():
             self.y_offset -= self.input.y_axis * self.player.move_speed
         # TODO: Needs a better way against guarding when scene doesn't have map. Also row_i switching with col_i is a trip.
         if self.map:
-            for row_i, row in enumerate(self.map):
-                for col_i, col in enumerate(row):
-                    self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.x_offset, self.y_offset)
-        # if self.map:
-        #     for row_i, row in enumerate(self.map[self.map_center[1] - self.col_length // 2 : self.map_center[1] + self.col_length // 2]):
-        #         for col_i, col in enumerate(row[self.map_center[0] - self.row_length // 2 : self.map_center[0] + self.row_length // 2]):
-        #             self.texture.draw_grid(self.screen, col, col_i, row_i)
-                    
+            self.draw_map()
         
         # TODO: Implement z_order. Blit images in front of the other in proper order
         self.all_sprites.draw(self.screen)
@@ -52,6 +45,14 @@ class Scene():
         self.collisions()
                 
         pygame.display.flip()
+        
+    def draw_map(self):
+        # for row_i, row in enumerate(self.map):
+        #     for col_i, col in enumerate(row):
+        #         self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.x_offset, self.y_offset)
+        for row_i, row in enumerate(self.map[self.map_center[1] - self.col_length // 2 : self.map_center[1] + self.col_length // 2]):
+            for col_i, col in enumerate(row[self.map_center[0] - self.row_length // 2 : self.map_center[0] + self.row_length // 2]):
+                self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.x_offset, self.y_offset)
 
     def collisions(self):
         if self.player:
