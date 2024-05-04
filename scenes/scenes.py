@@ -16,11 +16,13 @@ class Scene():
         self.players = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
         self.texture = TextureMaster()
+        self.map = None
 
     def update(self):
-        # self.screen.fill(self.background)
+        self.screen.fill(self.background)
         # self.texture.draw_tiles(self.screen, 'grass', 2, 3)
-        self.texture.fill_screen_tile(self.screen, 'grass')
+        # self.texture.fill_screen_tile(self.screen, 'grass')
+        self.texture.draw_grid(self.screen, 0, 1, 2)
         self.all_sprites.update()
         self.all_sprites.draw(self.screen)
         
@@ -53,4 +55,5 @@ class Scene():
                 player = Player(position = player_config['position'])
                 scene.all_sprites.add(player)
                 scene.players.add(player)
+            scene.map = config['map']
         return scene    

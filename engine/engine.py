@@ -9,7 +9,7 @@ from scenes.scenes import Scene
 class Topdown:
     def __init__(self):
         pygame.init()
-        self.set_screen_size(1200, 900)
+        self.set_screen_size(1280, 1024)
         # self.set_screen_size(fullscreen=True)
         pygame.display.set_caption("Topdown")
         self.scenes = {}
