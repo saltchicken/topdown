@@ -54,7 +54,6 @@ class Scene():
         pygame.display.flip()
 
     def collisions(self):
-        # TODO: Why are two collisions detected at start
         if self.player:
             self.player.draw_hitbox(self.screen)
             for enemy in self.enemies:
@@ -63,7 +62,6 @@ class Scene():
                 if collision: self.handle_collisions(self.player, enemy)
                     
     def handle_collisions(self, player, enemy):
-        # pass
         logger.debug(f"Player {player} collided with Enemy {enemy}")
         
     @classmethod
