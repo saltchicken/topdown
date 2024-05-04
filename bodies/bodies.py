@@ -85,10 +85,11 @@ class Player(Body):
         self.y = self._y
 
     def physics(self):
-        if abs(self.input.x_axis) > 0:
-            self.x += self.input.x_axis * self.move_speed
-        if abs(self.input.y_axis) > 0:
-            self.y += self.input.y_axis * self.move_speed
+        pass
+        # if abs(self.input.x_axis) > 0:
+        #     self.x += self.input.x_axis * self.move_speed
+        # if abs(self.input.y_axis) > 0:
+        #     self.y += self.input.y_axis * self.move_speed
           
     def animate(self):
         # if self.input.a_button == 1 and self.state.current_action == self.state.actions['idle']:

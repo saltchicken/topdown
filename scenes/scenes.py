@@ -23,6 +23,9 @@ class Scene():
         self.map_center = (11, 9)
         self.row_length = 20
         self.col_length = 16
+        
+        self.x_offset = 0.0
+        self.y_offset = 0.0
 
     def update(self):
         self.screen.fill(self.background)
@@ -38,14 +41,16 @@ class Scene():
             current_player = player
             break
         
+        x_offset = 0
         if current_player:
-            print(current_player.input.x_axis * current_player.move_speed)
+            self.x_offset -= current_player.input.x_axis * current_player.move_speed
+            self.y_offset -= current_player.input.y_axis * current_player.move_speed
         
         # TODO: Needs a better way against guarding when scene doesn't have map. Also row_i switching with col_i is a trip.
         if self.map:
             for row_i, row in enumerate(self.map):
                 for col_i, col in enumerate(row):
-                    self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, 32, 32)
+                    self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.x_offset, self.y_offset)
         # if self.map:
         #     for row_i, row in enumerate(self.map[self.map_center[1] - self.col_length // 2 : self.map_center[1] + self.col_length // 2]):
         #         for col_i, col in enumerate(row[self.map_center[0] - self.row_length // 2 : self.map_center[0] + self.row_length // 2]):
