@@ -41,7 +41,6 @@ class Scene():
             current_player = player
             break
         
-        x_offset = 0
         if current_player:
             self.x_offset -= current_player.input.x_axis * current_player.move_speed
             self.y_offset -= current_player.input.y_axis * current_player.move_speed
