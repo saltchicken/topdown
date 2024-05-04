@@ -13,6 +13,7 @@ class Scene():
         self.WIDTH, self.HEIGHT = info.current_w, info.current_h
         self.screen = screen
         self.background = (40, 40, 40)
+        self.input = Input()
         self.all_sprites = pygame.sprite.Group()
         self.players = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
@@ -32,18 +33,24 @@ class Scene():
         # self.texture.draw_tiles(self.screen, 'grass', 2, 3)
         # self.texture.fill_screen_tile(self.screen, 'grass')
         
-        
-        self.all_sprites.update()
-        
-        # TODO: Need a better way of getting the main character for camera moving
+        self.input.update()
         current_player = None
         for player in self.players:
             current_player = player
             break
+        if current_player:
+            self.all_sprites.update(self.input, current_player.move_speed)
+        
+        # TODO: Need a better way of getting the main character for camera moving
+        
         
         if current_player:
-            self.x_offset -= current_player.input.x_axis * current_player.move_speed
-            self.y_offset -= current_player.input.y_axis * current_player.move_speed
+            self.x_offset -= self.input.x_axis * current_player.move_speed
+            self.y_offset -= self.input.y_axis * current_player.move_speed
+            
+        # for enemy in self.enemies:
+        #     enemy.x -= self.input.x_axis * current_player.move_speed
+        #     enemy.y -= self.input.y_axis * current_player.move_speed
         
         # TODO: Needs a better way against guarding when scene doesn't have map. Also row_i switching with col_i is a trip.
         if self.map:
@@ -76,8 +83,8 @@ class Scene():
                 if collision: self.handle_collisions(player, enemy)
                     
     def handle_collisions(self, player, enemy):
-        pass
-        # logger.debug(f"Player {player} collided with Enemy {enemy}")
+        # pass
+        logger.debug(f"Player {player} collided with Enemy {enemy}")
         
     @classmethod
     def from_config(cls, config_file, screen):
@@ -94,3 +101,25 @@ class Scene():
                 scene.players.add(player)
             scene.map = config['map']
         return scene    
+    
+class Input():
+    def __init__(self):
+        self.joystick = pygame.joystick.Joystick(0)
+        self.joystick.init()
+
+    def update(self):
+        self.x_axis = self.process_axis(self.joystick.get_axis(0))
+        self.y_axis = self.process_axis(self.joystick.get_axis(1))
+        self.a_button = self.joystick.get_button(0)
+        # print(self.a_button)
+       
+
+    def process_axis(self, value: float):
+        value = round(value, 1)
+        if value <= 0.55 and value >= 0.0:
+            value = 0.0
+        elif value >= -0.55 and value < 0.0:
+            value = 0.0
+        else:
+            value = value
+        return value

@@ -46,14 +46,15 @@ class Body(pygame.sprite.Sprite):
         self.grid_y = int((self._y + self.grid_y_offset) // GRID)
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
 
-    def physics(self):
+    def physics(self, player_speed):
         pass
     
     def animate(self):
         pass
 
-    def update(self):
-        self.physics()
+    def update(self, input, player_speed):
+        self.input = input
+        self.physics(player_speed)
         self.animate()
         self.hitbox = self.get_hitbox()
     
@@ -78,13 +79,13 @@ class Player(Body):
         super().__init__(**kwargs)
         self.state = State('player2')
         self.move_speed = 3
-        self.input = Input()
+        # self.input = Input()
         self.grid_y_offset = 54
         # Set x to _x to call the setter method. Needed or initialization is buggy due to self.input
         self.x = self._x
         self.y = self._y
 
-    def physics(self):
+    def physics(self, player_speed):
         pass
         # if abs(self.input.x_axis) > 0:
         #     self.x += self.input.x_axis * self.move_speed
@@ -117,9 +118,10 @@ class Player(Body):
         elif self.input.y_axis > 0 and self.state.current_action != self.state.actions['FSS'] and abs(self.input.y_axis) > abs(self.input.x_axis):
             self.state.set_action('FSS')
             
-    def update(self):
-        self.input.update()
-        super().update()
+    def update(self, input, player_speed):
+        # TODO: Shouldn't need to set self.input to input but its needed for animate to work for player. Should be a better way.
+        # self.input = input
+        super().update(input, player_speed)
         
         
 
@@ -130,36 +132,38 @@ class Enemy(Body):
         # self.image.fill((0,255,0))
         self.move_speed = 2
 
-    def physics(self):
-        pass
+    def physics(self, player_speed):
+        self.x -= self.input.x_axis * player_speed
+        self.y -= self.input.y_axis * player_speed
         # self.x += 0.1 * self.move_speed
         # self.y += 0.1 * self.move_speed
         
     def animate(self):
         self.image = self.state.current_action.animation.next()
         # self.image = pygame.transform.flip(self.image, True, False)
+        
 
-class Input():
-    def __init__(self):
-        self.joystick = pygame.joystick.Joystick(0)
-        self.joystick.init()
+# class Input():
+#     def __init__(self):
+#         self.joystick = pygame.joystick.Joystick(0)
+#         self.joystick.init()
 
-    def update(self):
-        self.x_axis = self.process_axis(self.joystick.get_axis(0))
-        self.y_axis = self.process_axis(self.joystick.get_axis(1))
-        self.a_button = self.joystick.get_button(0)
-        # print(self.a_button)
+#     def update(self):
+#         self.x_axis = self.process_axis(self.joystick.get_axis(0))
+#         self.y_axis = self.process_axis(self.joystick.get_axis(1))
+#         self.a_button = self.joystick.get_button(0)
+#         # print(self.a_button)
        
 
-    def process_axis(self, value: float):
-        value = round(value, 1)
-        if value <= 0.55 and value >= 0.0:
-            value = 0.0
-        elif value >= -0.55 and value < 0.0:
-            value = 0.0
-        else:
-            value = value
-        return value
+#     def process_axis(self, value: float):
+#         value = round(value, 1)
+#         if value <= 0.55 and value >= 0.0:
+#             value = 0.0
+#         elif value >= -0.55 and value < 0.0:
+#             value = 0.0
+#         else:
+#             value = value
+#         return value
 
 
 class State:
