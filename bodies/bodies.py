@@ -19,6 +19,8 @@ class Body(pygame.sprite.Sprite):
         self.grid_x = self._x // GRID
         self.grid_y = self._y // GRID
         
+        self.grid_y_offset = 0
+        
         self.hitbox = None
 
     @property
@@ -40,7 +42,7 @@ class Body(pygame.sprite.Sprite):
     def y(self, value):
         self._y = value
         self.rect.y = int(self._y - self.HEIGHT / 2)
-        self.grid_y = self._y // GRID
+        self.grid_y = (self._y + self.grid_y_offset) // GRID
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
 
     def physics(self):
@@ -76,6 +78,10 @@ class Player(Body):
         self.state = State('player2')
         self.move_speed = 3
         self.input = Input()
+        self.grid_y_offset = 54
+        # Set x to _x to call the setter method. Needed or initialization is buggy due to self.input
+        self.x = self._x
+        self.y = self._y
 
     def physics(self):
         if abs(self.input.x_axis) > 0:

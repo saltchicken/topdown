@@ -28,6 +28,9 @@ class Scene():
         
         self.collisions()
         
+        for player in self.players:
+            print(player.grid_x, player.grid_y)
+        
         pygame.display.flip()
 
     def collisions(self):
@@ -40,7 +43,8 @@ class Scene():
                 if collision: self.handle_collisions(player, enemy)
                     
     def handle_collisions(self, player, enemy):
-        logger.debug(f"Player {player} collided with Enemy {enemy}")
+        pass
+        # logger.debug(f"Player {player} collided with Enemy {enemy}")
         
     @classmethod
     def from_config(cls, config_file, screen):
