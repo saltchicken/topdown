@@ -20,7 +20,7 @@ class Texture():
 class TextureMaster():
     def __init__(self, profile = ''):
         self.textures = {}
-        self.texture_mapping = {0: 'grass'}
+        self.texture_mapping = {0: 'grass', 1: 'road'}
         directory = 'textures/assets/'
         for texture in os.listdir(f'{directory}{profile}'):
             self.textures[texture] = Texture(f'{directory}{profile}/{texture}')

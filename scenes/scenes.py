@@ -22,7 +22,13 @@ class Scene():
         self.screen.fill(self.background)
         # self.texture.draw_tiles(self.screen, 'grass', 2, 3)
         # self.texture.fill_screen_tile(self.screen, 'grass')
-        self.texture.draw_grid(self.screen, 0, 1, 2)
+        
+        # TODO: Needs a better way against guarding when scene doesn't have map. Also row_i switching with col_i is a trip.
+        if self.map:
+            for row_i, row in enumerate(self.map):
+                for col_i, col in enumerate(row):
+                    self.texture.draw_grid(self.screen, col, col_i, row_i)
+                    
         self.all_sprites.update()
         self.all_sprites.draw(self.screen)
         
