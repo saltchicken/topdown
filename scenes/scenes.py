@@ -5,6 +5,7 @@ import pygame
 from bodies.bodies import Enemy, Player
 from textures.textures import TextureMaster
 
+GRID = 64
 
 class Scene():
     def __init__(self, screen):
@@ -17,26 +18,47 @@ class Scene():
         self.enemies = pygame.sprite.Group()
         self.texture = TextureMaster()
         self.map = None
+        
+        # TODO: Clean this up for dealing with where center of camera is
+        self.map_center = (11, 9)
+        self.row_length = 20
+        self.col_length = 16
 
     def update(self):
         self.screen.fill(self.background)
         # self.texture.draw_tiles(self.screen, 'grass', 2, 3)
         # self.texture.fill_screen_tile(self.screen, 'grass')
         
+        
+        self.all_sprites.update()
+        
+        # TODO: Need a better way of getting the main character for camera moving
+        current_player = None
+        for player in self.players:
+            current_player = player
+            break
+        
+        if current_player:
+            print(current_player.input.x_axis * current_player.move_speed)
+        
         # TODO: Needs a better way against guarding when scene doesn't have map. Also row_i switching with col_i is a trip.
         if self.map:
             for row_i, row in enumerate(self.map):
                 for col_i, col in enumerate(row):
-                    self.texture.draw_grid(self.screen, col, col_i, row_i)
+                    self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, 32, 32)
+        # if self.map:
+        #     for row_i, row in enumerate(self.map[self.map_center[1] - self.col_length // 2 : self.map_center[1] + self.col_length // 2]):
+        #         for col_i, col in enumerate(row[self.map_center[0] - self.row_length // 2 : self.map_center[0] + self.row_length // 2]):
+        #             self.texture.draw_grid(self.screen, col, col_i, row_i)
                     
-        self.all_sprites.update()
+        
         # TODO: Implement z_order. Blit images in front of the other in proper order
         self.all_sprites.draw(self.screen)
         
         self.collisions()
         
-        for player in self.players:
-            print(player.grid_x, player.grid_y)
+        # for player in self.players:
+        #     print(player.grid_x, player.grid_y)
         
         pygame.display.flip()
 
