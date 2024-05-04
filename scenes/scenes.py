@@ -55,12 +55,12 @@ class Scene():
 
     def collisions(self):
         # TODO: Why are two collisions detected at start
-        for player in self.players:
-            player.draw_hitbox(self.screen)
+        if self.player:
+            self.player.draw_hitbox(self.screen)
             for enemy in self.enemies:
-                collision = player.hitbox.colliderect(enemy.hitbox)
+                collision = self.player.hitbox.colliderect(enemy.hitbox)
                 enemy.draw_hitbox(self.screen)
-                if collision: self.handle_collisions(player, enemy)
+                if collision: self.handle_collisions(self.player, enemy)
                     
     def handle_collisions(self, player, enemy):
         # pass
