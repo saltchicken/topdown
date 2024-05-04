@@ -15,43 +15,26 @@ class Scene():
         self.background = (40, 40, 40)
         self.input = Input()
         self.all_sprites = pygame.sprite.Group()
-        self.players = pygame.sprite.Group()
+        self.player = None
         self.enemies = pygame.sprite.Group()
         self.texture = TextureMaster()
         self.map = None
         
         # TODO: Clean this up for dealing with where center of camera is
-        self.map_center = (11, 9)
-        self.row_length = 20
-        self.col_length = 16
+        # self.map_center = (11, 9)
+        # self.row_length = 20
+        # self.col_length = 16
         
         self.x_offset = 0.0
         self.y_offset = 0.0
 
     def update(self):
         self.screen.fill(self.background)
-        # self.texture.draw_tiles(self.screen, 'grass', 2, 3)
-        # self.texture.fill_screen_tile(self.screen, 'grass')
-        
         self.input.update()
-        current_player = None
-        for player in self.players:
-            current_player = player
-            break
-        if current_player:
-            self.all_sprites.update(self.input, current_player.move_speed)
-        
-        # TODO: Need a better way of getting the main character for camera moving
-        
-        
-        if current_player:
-            self.x_offset -= self.input.x_axis * current_player.move_speed
-            self.y_offset -= self.input.y_axis * current_player.move_speed
-            
-        # for enemy in self.enemies:
-        #     enemy.x -= self.input.x_axis * current_player.move_speed
-        #     enemy.y -= self.input.y_axis * current_player.move_speed
-        
+        if self.player:
+            self.all_sprites.update(self.input, self.player.move_speed)       
+            self.x_offset -= self.input.x_axis * self.player.move_speed
+            self.y_offset -= self.input.y_axis * self.player.move_speed
         # TODO: Needs a better way against guarding when scene doesn't have map. Also row_i switching with col_i is a trip.
         if self.map:
             for row_i, row in enumerate(self.map):
@@ -67,10 +50,7 @@ class Scene():
         self.all_sprites.draw(self.screen)
         
         self.collisions()
-        
-        # for player in self.players:
-        #     print(player.grid_x, player.grid_y)
-        
+                
         pygame.display.flip()
 
     def collisions(self):
@@ -95,10 +75,9 @@ class Scene():
                 enemy = Enemy(position = enemy_config['position'])
                 scene.all_sprites.add(enemy)
                 scene.enemies.add(enemy)
-            for player_config in config['player']:
-                player = Player(position = player_config['position'])
+                player = Player(position = config['player']['position'])
                 scene.all_sprites.add(player)
-                scene.players.add(player)
+                scene.player = player
             scene.map = config['map']
         return scene    
     

@@ -1,7 +1,5 @@
 {
-    "player": [
-        {"position": [600, 400]}
-    ],
+    "player":  {"position": [600, 400]},
     "enemies": [
         {"position": [500, 100]}
     ],
