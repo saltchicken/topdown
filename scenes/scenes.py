@@ -85,9 +85,9 @@ class Scene():
                 enemy = Enemy(position = enemy_config['position'])
                 scene.all_sprites.add(enemy)
                 scene.enemies.add(enemy)
-                player = Player(position = config['player']['position'])
-                scene.all_sprites.add(player)
-                scene.player = player
+            player = Player(position = config['player']['position'])
+            scene.all_sprites.add(player)
+            scene.player = player
             scene.map = config['map']
         return scene    
     
