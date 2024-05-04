@@ -30,6 +30,7 @@ class Scene():
                     self.texture.draw_grid(self.screen, col, col_i, row_i)
                     
         self.all_sprites.update()
+        # TODO: Implement z_order. Blit images in front of the other in proper order
         self.all_sprites.draw(self.screen)
         
         self.collisions()
