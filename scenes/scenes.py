@@ -14,7 +14,7 @@ class Scene():
         self.screen = screen
         self.background = (40, 40, 40)
         self.input = Input()
-        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites = pygame.sprite.LayeredUpdates()
         self.player = None
         self.enemies = pygame.sprite.Group()
         self.texture = TextureMaster()
@@ -40,11 +40,15 @@ class Scene():
             self.draw_map()
         
         # TODO: Implement z_order. Blit images in front of the other in proper order
+        # self.z_order_sort_all_sprites()
         self.all_sprites.draw(self.screen)
         
         self.collisions()
                 
         pygame.display.flip()
+        
+    # def z_order_sort_all_sprites(self):
+    #     self.all_sprites = sorted(self.all_sprites, key=lambda sprite: sprite.y)
         
     def draw_map(self):
         # for row_i, row in enumerate(self.map):
@@ -63,6 +67,13 @@ class Scene():
                 if collision: self.handle_collisions(self.player, enemy)
                     
     def handle_collisions(self, player, enemy):
+        # TODO:Better z-order handling
+        if player.y > enemy.y:
+            self.all_sprites.change_layer(player, 1)
+            self.all_sprites.change_layer(enemy, 0)
+        else:
+            self.all_sprites.change_layer(player, 0)
+            self.all_sprites.change_layer(enemy, 1)
         logger.debug(f"Player {player} collided with Enemy {enemy}")
         
     @classmethod

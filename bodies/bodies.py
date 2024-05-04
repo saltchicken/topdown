@@ -84,6 +84,8 @@ class Player(Body):
         # Set x to _x to call the setter method. Needed or initialization is buggy due to self.input
         self.x = self._x
         self.y = self._y
+        
+        self.layer = 0
 
     def physics(self, player_speed):
         pass
@@ -131,6 +133,8 @@ class Enemy(Body):
         self.state = State('enemy')
         # self.image.fill((0,255,0))
         self.move_speed = 2
+        
+        self.layer = 1
 
     def physics(self, player_speed):
         self.x -= self.input.x_axis * player_speed
