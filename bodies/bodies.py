@@ -6,6 +6,8 @@ from loguru import logger
 
 from dataclasses import dataclass
 
+GRID = 64
+
 class Body(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
@@ -14,6 +16,8 @@ class Body(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self._x = float(self.WIDTH / 2) + float(position[0])
         self._y = float(self.HEIGHT / 2) + float(position[1])
+        self.grid_x = self._x // GRID
+        self.grid_y = self._y // GRID
         
         self.hitbox = None
 
@@ -29,12 +33,14 @@ class Body(pygame.sprite.Sprite):
     def x(self, value):
         self._x = value
         self.rect.x = int(self._x - self.WIDTH / 2)
+        self.grid_x = self._x // GRID
         # max(0, min(player_rect.x, SCREEN_WIDTH - player_rect.width))
 
     @y.setter
     def y(self, value):
         self._y = value
         self.rect.y = int(self._y - self.HEIGHT / 2)
+        self.grid_y = self._y // GRID
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
 
     def physics(self):
@@ -72,8 +78,10 @@ class Player(Body):
         self.input = Input()
 
     def physics(self):
-        self.x += self.input.x_axis * self.move_speed
-        self.y += self.input.y_axis * self.move_speed
+        if abs(self.input.x_axis) > 0:
+            self.x += self.input.x_axis * self.move_speed
+        if abs(self.input.y_axis) > 0:
+            self.y += self.input.y_axis * self.move_speed
           
     def animate(self):
         # if self.input.a_button == 1 and self.state.current_action == self.state.actions['idle']:
@@ -115,8 +123,9 @@ class Enemy(Body):
         self.move_speed = 2
 
     def physics(self):
-        self.x += 0.1 * self.move_speed
-        self.y += 0.1 * self.move_speed
+        pass
+        # self.x += 0.1 * self.move_speed
+        # self.y += 0.1 * self.move_speed
         
     def animate(self):
         self.image = self.state.current_action.animation.next()
