@@ -23,6 +23,7 @@ class Body(pygame.sprite.Sprite):
         self.grid_y = int((self._y + self.grid_y_offset) // GRID)
         
         self.hitbox = None
+        self.visual_hitbox = None
 
     @property
     def x(self):
@@ -57,6 +58,7 @@ class Body(pygame.sprite.Sprite):
         self.physics(player_speed, player_collision)
         self.animate()
         self.hitbox = self.get_hitbox()
+        self.visual_hitbox = self.get_visual_hitbox()
     
     def get_hitbox(self):
         action_frame = self.state.current_action.animation.frame_i
@@ -70,6 +72,19 @@ class Body(pygame.sprite.Sprite):
                             self.rect.y + self.state.current_action.hitbox[action_frame][1],
                             self.state.current_action.hitbox[action_frame][2],
                             self.state.current_action.hitbox[action_frame][3])
+        
+    def get_visual_hitbox(self):
+        action_frame = self.state.current_action.animation.frame_i
+        # if action_frame >= self.state.current_action.animation.count:
+        #     logger.warning('animation.i is greater than count, why is this happening')
+        #     return pygame.Rect( self.rect.x + self.state.current_action.hitbox[-1][0],
+        #                     self.rect.y + self.state.current_action.hitbox[-1][1],
+        #                     self.state.current_action.hitbox[-1][2],
+        #                     self.state.current_action.hitbox[-1][3])
+        return pygame.Rect( self.rect.x + self.state.current_action.visual_hitbox[action_frame][0],
+                            self.rect.y + self.state.current_action.visual_hitbox[action_frame][1],
+                            self.state.current_action.visual_hitbox[action_frame][2],
+                            self.state.current_action.visual_hitbox[action_frame][3])
         
     def get_lookahead_hitbox(self, input):
         action_frame = self.state.current_action.animation.frame_i
@@ -167,7 +182,8 @@ class State:
                                             action_info['count'], 
                                             action_info['loop'], 
                                             action_info['frames'],
-                                            action_info['hitbox']
+                                            action_info['hitbox'],
+                                            action_info['visual_hitbox']
                                          )
         # self.offset_rect = action_info['hitbox']
 
@@ -192,6 +208,7 @@ class Action():
         loop: bool
         frames: int
         hitbox: list
+        visual_hitbox: list
         
         def __post_init__(self):
             self.animation = self.load_animation()

@@ -45,9 +45,10 @@ class Scene():
         
         # TODO: Implement z_order. Blit images in front of the other in proper order
         # self.z_order_sort_all_sprites()
-        self.all_sprites.draw(self.screen)
         
-        self.collisions()
+        self.draw_hitboxes()
+        
+        self.visual_collisions()
                 
         pygame.display.flip()
         
@@ -55,6 +56,13 @@ class Scene():
         
     # def z_order_sort_all_sprites(self):
     #     self.all_sprites = sorted(self.all_sprites, key=lambda sprite: sprite.y)
+    
+    def draw_hitboxes(self):
+        self.all_sprites.draw(self.screen)
+        if self.player:
+            self.player.draw_hitbox(self.screen)
+        for enemy in self.enemies:
+            enemy.draw_hitbox(self.screen)
         
     def draw_map(self):
         # for row_i, row in enumerate(self.map):
@@ -67,7 +75,6 @@ class Scene():
     def collision_look_ahead(self):
         if self.player:
             hitbox = self.player.get_lookahead_hitbox(self.input)
-            print(hitbox)
             player_collision = False
             for enemy in self.enemies:
                 if enemy.hitbox:
@@ -80,29 +87,25 @@ class Scene():
                 self.player_collision = True
             else:
                 self.player_collision = False
-            logger.debug(f"Player collision lookahead: {self.player_collision}")
+            # logger.debug(f"Player collision lookahead: {self.player_collision}")
             
             
 
-    def collisions(self):
+    def visual_collisions(self):
         if self.player:
-            self.player.draw_hitbox(self.screen)
             for enemy in self.enemies:
-                collision = self.player.hitbox.colliderect(enemy.hitbox)
-                enemy.draw_hitbox(self.screen)
+                collision = self.player.visual_hitbox.colliderect(enemy.visual_hitbox)
                 if collision:
-                    player_collision = True
-                    self.handle_collisions(self.player, enemy)
+                    self.handle_visual_collisions(self.player, enemy)
                     
-    def handle_collisions(self, player, enemy):
-        # TODO:Better z-order handling
+    def handle_visual_collisions(self, player, enemy):
         if player.y > enemy.y:
             self.all_sprites.change_layer(player, 1)
             self.all_sprites.change_layer(enemy, 0)
         else:
             self.all_sprites.change_layer(player, 0)
             self.all_sprites.change_layer(enemy, 1)
-        # logger.debug(f"Player {player} collided with Enemy {enemy}")
+        logger.debug(f"Player {player} collided with Enemy {enemy}")
         
     @classmethod
     def from_config(cls, config_file, screen):
