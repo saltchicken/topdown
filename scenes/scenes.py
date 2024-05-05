@@ -66,8 +66,6 @@ class Level(Scene):
         self.visual_collisions()
                 
         pygame.display.flip()
-        
-        self.player_collision = False
     
     def draw_hitboxes(self):
         self.all_sprites.draw(self.screen)
@@ -86,22 +84,13 @@ class Level(Scene):
 
     def collision_look_ahead(self):
         hitbox = self.player.get_lookahead_hitbox(self.input)
-        player_collision = False
+        self.player_collision = False
         for enemy in self.enemies:
             if enemy.hitbox:
-                collision = hitbox.colliderect(enemy.hitbox)
-            else:
-                continue
-            if collision:
-                player_collision = True
-        if player_collision:
-            self.player_collision = True
-        else:
-            self.player_collision = False
-            # logger.debug(f"Player collision lookahead: {self.player_collision}")
-            
-            
-
+                if hitbox.colliderect(enemy.hitbox):
+                    self.player_collision = True
+                    # logger.debug(f"Player collision lookahead: {self.player_collision}")
+                    
     def visual_collisions(self):
         if self.player:
             for enemy in self.enemies:
