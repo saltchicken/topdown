@@ -4,7 +4,7 @@ from pygame.locals import QUIT, JOYBUTTONDOWN
 from pathlib import Path
 from loguru import logger
 
-from scenes.scenes import Scene
+from scenes.scenes import Level
 from scenes.menu import Menu
 
 class Topdown:
@@ -14,7 +14,7 @@ class Topdown:
         # self.set_screen_size(fullscreen=True)
         pygame.display.set_caption("Topdown")
         self.scenes = {}
-        self.scenes['scene'] = Scene.from_config(Path('scenes/assets/scene2.json'), self.screen)
+        self.scenes['level'] = Level.from_config(Path('scenes/assets/scene2.json'), self.screen)
         self.scenes['menu'] = Menu(self.screen)
         self.set_scene('menu')
         self.clock = pygame.time.Clock()
@@ -56,7 +56,7 @@ class Topdown:
                     if self.current_scene != self.scenes['menu']:
                         self.current_scene = self.scenes['menu']
                     else:
-                        self.current_scene = self.scenes['scene']
+                        self.current_scene = self.scenes['level']
             # TODO: Better way to pass this event needed for Menu
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 return event

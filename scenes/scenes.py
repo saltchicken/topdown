@@ -9,7 +9,7 @@ from .menu import Menu
 
 GRID = 64
 
-class Scene():
+class Level():
     def __init__(self, screen):
         info = pygame.display.Info()
         self.WIDTH, self.HEIGHT = info.current_w, info.current_h
@@ -41,7 +41,7 @@ class Scene():
             if not self.player_collision:     
                 self.x_offset -= self.input.x_axis * self.player.move_speed
                 self.y_offset -= self.input.y_axis * self.player.move_speed
-        # TODO: Needs a better way against guarding when scene doesn't have map. Also row_i switching with col_i is a trip.
+        # TODO: Needs a better way against guarding when Level doesn't have map. Also row_i switching with col_i is a trip.
         if self.map:
             self.draw_map()
         
@@ -111,18 +111,18 @@ class Scene():
         
     @classmethod
     def from_config(cls, config_file, screen):
-        scene = cls(screen)
+        level = cls(screen)
         with open(config_file, 'r') as f:
             config = json.load(f)
             for enemy_config in config['enemies']:
                 enemy = Enemy(position = enemy_config['position'])
-                scene.all_sprites.add(enemy)
-                scene.enemies.add(enemy)
+                level.all_sprites.add(enemy)
+                level.enemies.add(enemy)
             player = Player(position = config['player']['position'])
-            scene.all_sprites.add(player)
-            scene.player = player
-            scene.map = config['map']
-        return scene    
+            level.all_sprites.add(player)
+            level.player = player
+            level.map = config['map']
+        return level    
     
 class Input():
     def __init__(self):
