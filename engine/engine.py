@@ -4,8 +4,7 @@ from pygame.locals import QUIT, JOYBUTTONDOWN
 from pathlib import Path
 from loguru import logger
 
-from scenes.scenes import Level
-from scenes.menu import Menu
+from scenes.scenes import Level, Menu
 
 class Topdown:
     def __init__(self):
