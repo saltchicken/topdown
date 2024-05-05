@@ -56,28 +56,18 @@ class Level(Scene):
         self.screen.fill(self.background)
         self.input.update()
         self.collision_look_ahead()
-        if self.player:
-            self.all_sprites.update(self.input, self.player.move_speed, self.player_collision)
-            if not self.player_collision:     
-                self.x_offset -= self.input.x_axis * self.player.move_speed
-                self.y_offset -= self.input.y_axis * self.player.move_speed
-        # TODO: Needs a better way against guarding when Level doesn't have map. Also row_i switching with col_i is a trip.
-        if self.map:
-            self.draw_map()
-        
-        # TODO: Implement z_order. Blit images in front of the other in proper order
-        # self.z_order_sort_all_sprites()
-        
+        self.all_sprites.update(self.input, self.player.move_speed, self.player_collision)
+        if not self.player_collision:     
+            self.x_offset -= self.input.x_axis * self.player.move_speed
+            self.y_offset -= self.input.y_axis * self.player.move_speed
+
+        self.draw_map()
         self.draw_hitboxes()
-        
         self.visual_collisions()
                 
         pygame.display.flip()
         
         self.player_collision = False
-        
-    # def z_order_sort_all_sprites(self):
-    #     self.all_sprites = sorted(self.all_sprites, key=lambda sprite: sprite.y)
     
     def draw_hitboxes(self):
         self.all_sprites.draw(self.screen)
