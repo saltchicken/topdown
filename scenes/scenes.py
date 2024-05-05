@@ -13,7 +13,7 @@ class Scene():
         self.WIDTH, self.HEIGHT = info.current_w, info.current_h
         self.screen = screen
         
-    def update():
+    def update(self, events):
         pass
     
 
@@ -52,7 +52,7 @@ class Level(Scene):
             self.player = player
             self.map = config['map']
 
-    def update(self, event):
+    def update(self, events):
         self.screen.fill(self.background)
         self.input.update()
         self.collision_look_ahead()
@@ -132,17 +132,14 @@ class Menu(Scene):
         self.BG = (75, 85, 65)
         
 
-    def update(self, event):
+    def update(self, events):
         self.screen.fill(self.background)
-        # running = True
         dropdown_rect = pygame.Rect(100, 100, self.DROPDOWN_WIDTH, self.DROPDOWN_HEIGHT)
         options = ["Option 1", "Option 2", "Option 3"]
         
-        
-        # while running:
         self.screen.fill(self.BG)
             
-        if event:
+        for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if dropdown_rect.collidepoint(event.pos):
                     self.show_options = not self.show_options

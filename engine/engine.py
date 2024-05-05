@@ -21,8 +21,8 @@ class Topdown:
     def loop(self):
         self.running = True
         while self.running:
-            event = self.handle_events()
-            self.current_scene.update(event)
+            events = self.handle_events()
+            self.current_scene.update(events)
             self.clock.tick(90)
         self.exit()
         
@@ -42,7 +42,8 @@ class Topdown:
             print("Invalid state. State remains the same. Available scenes are:", list(self.scenes.keys()))
             
     def handle_events(self):
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == QUIT:
                 self.running = False
             elif event.type == JOYBUTTONDOWN:
@@ -56,10 +57,7 @@ class Topdown:
                         self.current_scene = self.scenes['menu']
                     else:
                         self.current_scene = self.scenes['level']
-            # TODO: Better way to pass this event needed for Menu
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                return event
-        return None
+        return events
 
 
     def exit(self):
