@@ -40,6 +40,8 @@ class Level(Scene):
         
         self.load_config(config_file)
         
+        self.all_sprites.update(self.input, self.player.move_speed, self.player_collision)
+        
     def load_config(self, config_file):
         with open(config_file, 'r') as file:
             config = json.load(file)
@@ -89,7 +91,7 @@ class Level(Scene):
             if enemy.hitbox:
                 if hitbox.colliderect(enemy.hitbox):
                     self.player_collision = True
-                    # logger.debug(f"Player collision lookahead: {self.player_collision}")
+                    logger.debug(f"Player collision lookahead: {self.player_collision}")
                     
     def visual_collisions(self):
         if self.player:
@@ -106,7 +108,7 @@ class Level(Scene):
         else:
             self.all_sprites.change_layer(player, 0)
             self.all_sprites.change_layer(enemy, 1)
-        # logger.debug(f"Player {player} collided with Enemy {enemy}")
+        logger.debug(f"Player {player} collided with Enemy {enemy}")
         
     
     
@@ -179,6 +181,8 @@ class Input():
     def __init__(self):
         self.joystick = pygame.joystick.Joystick(0)
         self.joystick.init()
+        self.x_axis = 0.0
+        self.y_axis = 0.0
 
     def update(self):
         self.x_axis = self.process_axis(self.joystick.get_axis(0))
