@@ -132,13 +132,16 @@ class Menu(Scene):
         
         pygame.display.flip()
         
-    
-            
-class Dropdown():
+class Field():
     def __init__(self, screen, x, y):
         self.screen = screen
         self.x = x
         self.y = y
+         
+            
+class Dropdown(Field):
+    def __init__(self, screen, x, y):
+        super().__init__(screen, x, y)
         self.DROPDOWN_WIDTH = 150
         self.DROPDOWN_HEIGHT = 30
         
@@ -146,7 +149,6 @@ class Dropdown():
         
         self.FONT_SIZE = 24
         self.font = pygame.font.SysFont(None, self.FONT_SIZE)
-        
         
         self.show_options = False
         self.selected_option = 0
