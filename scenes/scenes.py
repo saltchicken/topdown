@@ -99,13 +99,14 @@ class Level(Scene):
                     self.handle_visual_collisions(self.player, enemy)
                     
     def handle_visual_collisions(self, player, enemy):
+        # TODO: Layers 0 and 1 were used for learning. Probably need a better settings when environment factored in
         if player.y > enemy.y:
             self.all_sprites.change_layer(player, 1)
             self.all_sprites.change_layer(enemy, 0)
         else:
             self.all_sprites.change_layer(player, 0)
             self.all_sprites.change_layer(enemy, 1)
-        logger.debug(f"Player {player} collided with Enemy {enemy}")
+        # logger.debug(f"Player {player} collided with Enemy {enemy}")
         
     
     
