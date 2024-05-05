@@ -212,9 +212,10 @@ class Input():
 
     def process_axis(self, value: float):
         value = round(value, 1)
-        if value <= 0.55 and value >= 0.0:
+        threshold = 0.55
+        if value <= threshold and value >= 0.0:
             value = 0.0
-        elif value >= -0.55 and value < 0.0:
+        elif value >= -threshold and value < 0.0:
             value = 0.0
         else:
             value = value
