@@ -1,1 +1,1 @@
-{"width": 128, "height": 128, "count": 1, "frames": 32, "loop": true, "hitbox": [[32, 100, 64, 20]]}
+{"width": 128, "height": 128, "count": 1, "frames": 32, "loop": true, "hitbox": [[32, 100, 64, 20]], "visual_hitbox": [[32, 11, 64, 106]]}
