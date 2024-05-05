@@ -20,6 +20,8 @@ class Scene():
         self.texture = TextureMaster()
         self.map = None
         
+        self.player_collision = False
+        
         # TODO: Clean this up for dealing with where center of camera is
         self.map_center = (11, 9)
         self.row_length = 22
@@ -31,10 +33,12 @@ class Scene():
     def update(self):
         self.screen.fill(self.background)
         self.input.update()
+        self.collision_look_ahead()
         if self.player:
-            self.all_sprites.update(self.input, self.player.move_speed)       
-            self.x_offset -= self.input.x_axis * self.player.move_speed
-            self.y_offset -= self.input.y_axis * self.player.move_speed
+            self.all_sprites.update(self.input, self.player.move_speed, self.player_collision)
+            if not self.player_collision:     
+                self.x_offset -= self.input.x_axis * self.player.move_speed
+                self.y_offset -= self.input.y_axis * self.player.move_speed
         # TODO: Needs a better way against guarding when scene doesn't have map. Also row_i switching with col_i is a trip.
         if self.map:
             self.draw_map()
@@ -47,6 +51,8 @@ class Scene():
                 
         pygame.display.flip()
         
+        self.player_collision = False
+        
     # def z_order_sort_all_sprites(self):
     #     self.all_sprites = sorted(self.all_sprites, key=lambda sprite: sprite.y)
         
@@ -58,13 +64,35 @@ class Scene():
             for col_i, col in enumerate(row[self.map_center[0] - self.row_length // 2 : self.map_center[0] + self.row_length // 2]):
                 self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.x_offset, self.y_offset)
 
+    def collision_look_ahead(self):
+        if self.player:
+            hitbox = self.player.get_lookahead_hitbox(self.input)
+            print(hitbox)
+            player_collision = False
+            for enemy in self.enemies:
+                if enemy.hitbox:
+                    collision = hitbox.colliderect(enemy.hitbox)
+                else:
+                    continue
+                if collision:
+                    player_collision = True
+            if player_collision:
+                self.player_collision = True
+            else:
+                self.player_collision = False
+            logger.debug(f"Player collision lookahead: {self.player_collision}")
+            
+            
+
     def collisions(self):
         if self.player:
             self.player.draw_hitbox(self.screen)
             for enemy in self.enemies:
                 collision = self.player.hitbox.colliderect(enemy.hitbox)
                 enemy.draw_hitbox(self.screen)
-                if collision: self.handle_collisions(self.player, enemy)
+                if collision:
+                    player_collision = True
+                    self.handle_collisions(self.player, enemy)
                     
     def handle_collisions(self, player, enemy):
         # TODO:Better z-order handling
@@ -74,7 +102,7 @@ class Scene():
         else:
             self.all_sprites.change_layer(player, 0)
             self.all_sprites.change_layer(enemy, 1)
-        logger.debug(f"Player {player} collided with Enemy {enemy}")
+        # logger.debug(f"Player {player} collided with Enemy {enemy}")
         
     @classmethod
     def from_config(cls, config_file, screen):

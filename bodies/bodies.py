@@ -46,15 +46,15 @@ class Body(pygame.sprite.Sprite):
         self.grid_y = int((self._y + self.grid_y_offset) // GRID)
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
 
-    def physics(self, player_speed):
+    def physics(self, player_speed, player_collision):
         pass
     
     def animate(self):
         pass
 
-    def update(self, input, player_speed):
+    def update(self, input, player_speed, player_collision):
         self.input = input
-        self.physics(player_speed)
+        self.physics(player_speed, player_collision)
         self.animate()
         self.hitbox = self.get_hitbox()
     
@@ -68,6 +68,13 @@ class Body(pygame.sprite.Sprite):
         #                     self.state.current_action.hitbox[-1][3])
         return pygame.Rect( self.rect.x + self.state.current_action.hitbox[action_frame][0],
                             self.rect.y + self.state.current_action.hitbox[action_frame][1],
+                            self.state.current_action.hitbox[action_frame][2],
+                            self.state.current_action.hitbox[action_frame][3])
+        
+    def get_lookahead_hitbox(self, input):
+        action_frame = self.state.current_action.animation.frame_i
+        return pygame.Rect( self.rect.x + self.state.current_action.hitbox[action_frame][0] + input.x_axis * 2.5,
+                            self.rect.y + self.state.current_action.hitbox[action_frame][1] + input.y_axis * 2.5,
                             self.state.current_action.hitbox[action_frame][2],
                             self.state.current_action.hitbox[action_frame][3])
         
@@ -87,7 +94,7 @@ class Player(Body):
         
         self.layer = 0
 
-    def physics(self, player_speed):
+    def physics(self, player_speed, player_collision):
         pass
         # if abs(self.input.x_axis) > 0:
         #     self.x += self.input.x_axis * self.move_speed
@@ -120,10 +127,10 @@ class Player(Body):
         elif self.input.y_axis > 0 and self.state.current_action != self.state.actions['FSS'] and abs(self.input.y_axis) > abs(self.input.x_axis):
             self.state.set_action('FSS')
             
-    def update(self, input, player_speed):
+    def update(self, input, player_speed, player_collision):
         # TODO: Shouldn't need to set self.input to input but its needed for animate to work for player. Should be a better way.
         # self.input = input
-        super().update(input, player_speed)
+        super().update(input, player_speed, player_collision)
         
         
 
@@ -136,39 +143,16 @@ class Enemy(Body):
         
         self.layer = 1
 
-    def physics(self, player_speed):
-        self.x -= self.input.x_axis * player_speed
-        self.y -= self.input.y_axis * player_speed
-        # self.x += 0.1 * self.move_speed
-        # self.y += 0.1 * self.move_speed
+    def physics(self, player_speed, player_collision):
+        if not player_collision:
+            self.x -= self.input.x_axis * player_speed
+            self.y -= self.input.y_axis * player_speed
+            # self.x += 0.1 * self.move_speed
+            # self.y += 0.1 * self.move_speed
         
     def animate(self):
         self.image = self.state.current_action.animation.next()
         # self.image = pygame.transform.flip(self.image, True, False)
-        
-
-# class Input():
-#     def __init__(self):
-#         self.joystick = pygame.joystick.Joystick(0)
-#         self.joystick.init()
-
-#     def update(self):
-#         self.x_axis = self.process_axis(self.joystick.get_axis(0))
-#         self.y_axis = self.process_axis(self.joystick.get_axis(1))
-#         self.a_button = self.joystick.get_button(0)
-#         # print(self.a_button)
-       
-
-#     def process_axis(self, value: float):
-#         value = round(value, 1)
-#         if value <= 0.55 and value >= 0.0:
-#             value = 0.0
-#         elif value >= -0.55 and value < 0.0:
-#             value = 0.0
-#         else:
-#             value = value
-#         return value
-
 
 class State:
     def __init__(self, profile):
