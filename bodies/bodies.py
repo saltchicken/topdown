@@ -75,12 +75,6 @@ class Body(pygame.sprite.Sprite):
         
     def get_visual_hitbox(self):
         action_frame = self.state.current_action.animation.frame_i
-        # if action_frame >= self.state.current_action.animation.count:
-        #     logger.warning('animation.i is greater than count, why is this happening')
-        #     return pygame.Rect( self.rect.x + self.state.current_action.hitbox[-1][0],
-        #                     self.rect.y + self.state.current_action.hitbox[-1][1],
-        #                     self.state.current_action.hitbox[-1][2],
-        #                     self.state.current_action.hitbox[-1][3])
         return pygame.Rect( self.rect.x + self.state.current_action.visual_hitbox[action_frame][0],
                             self.rect.y + self.state.current_action.visual_hitbox[action_frame][1],
                             self.state.current_action.visual_hitbox[action_frame][2],
