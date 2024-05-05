@@ -5,6 +5,8 @@ import pygame
 from bodies.bodies import Enemy, Player
 from textures.textures import TextureMaster
 
+from .menu import Menu
+
 GRID = 64
 
 class Scene():
@@ -30,7 +32,7 @@ class Scene():
         self.x_offset = 0.0
         self.y_offset = 0.0
 
-    def update(self):
+    def update(self, event):
         self.screen.fill(self.background)
         self.input.update()
         self.collision_look_ahead()

@@ -5,6 +5,7 @@ from pathlib import Path
 from loguru import logger
 
 from scenes.scenes import Scene
+from scenes.menu import Menu
 
 class Topdown:
     def __init__(self):
@@ -14,15 +15,15 @@ class Topdown:
         pygame.display.set_caption("Topdown")
         self.scenes = {}
         self.scenes['scene'] = Scene.from_config(Path('scenes/assets/scene2.json'), self.screen)
-        self.scenes['menu'] = Scene(self.screen)
+        self.scenes['menu'] = Menu(self.screen)
         self.set_scene('menu')
         self.clock = pygame.time.Clock()
         
     def loop(self):
         self.running = True
         while self.running:
-            self.handle_events()
-            self.current_scene.update()
+            event = self.handle_events()
+            self.current_scene.update(event)
             self.clock.tick(90)
         self.exit()
         
@@ -43,19 +44,24 @@ class Topdown:
             
     def handle_events(self):
         for event in pygame.event.get():
-                if event.type == QUIT:
-                    self.running = False
-                elif event.type == JOYBUTTONDOWN:
-                    # Check if the 'A' button is pressed
-                    if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
-                        # logger.debug("A button pressed on the controller!")
-                        pass
-                    elif event.button == 7:
-                        logger.debug('Start button: switching scenes')
-                        if self.current_scene != self.scenes['menu']:
-                            self.current_scene = self.scenes['menu']
-                        else:
-                            self.current_scene = self.scenes['scene']
+            if event.type == QUIT:
+                self.running = False
+            elif event.type == JOYBUTTONDOWN:
+                # Check if the 'A' button is pressed
+                if event.button == 0:  # Adjust this index if needed, 0 usually represents the 'A' button
+                    # logger.debug("A button pressed on the controller!")
+                    pass
+                elif event.button == 7:
+                    logger.debug('Start button: switching scenes')
+                    if self.current_scene != self.scenes['menu']:
+                        self.current_scene = self.scenes['menu']
+                    else:
+                        self.current_scene = self.scenes['scene']
+            # TODO: Better way to pass this event needed for Menu
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                return event
+        return None
+
 
     def exit(self):
         pygame.quit()
