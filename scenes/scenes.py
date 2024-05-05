@@ -85,20 +85,19 @@ class Level(Scene):
                 self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.x_offset, self.y_offset)
 
     def collision_look_ahead(self):
-        if self.player:
-            hitbox = self.player.get_lookahead_hitbox(self.input)
-            player_collision = False
-            for enemy in self.enemies:
-                if enemy.hitbox:
-                    collision = hitbox.colliderect(enemy.hitbox)
-                else:
-                    continue
-                if collision:
-                    player_collision = True
-            if player_collision:
-                self.player_collision = True
+        hitbox = self.player.get_lookahead_hitbox(self.input)
+        player_collision = False
+        for enemy in self.enemies:
+            if enemy.hitbox:
+                collision = hitbox.colliderect(enemy.hitbox)
             else:
-                self.player_collision = False
+                continue
+            if collision:
+                player_collision = True
+        if player_collision:
+            self.player_collision = True
+        else:
+            self.player_collision = False
             # logger.debug(f"Player collision lookahead: {self.player_collision}")
             
             
