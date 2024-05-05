@@ -116,7 +116,29 @@ class Menu(Scene):
     def __init__(self, screen):
         super().__init__(screen)
         self.background = (40, 40, 40)
+        self.dropdown = Dropdown(self.screen, 100, 100)
         
+        
+
+    def update(self, events):
+        self.screen.fill(self.background)
+        
+        for event in events:
+            # TODO: Make this more efficient. Check all fields rectcollide and pass to the appropriate one
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.dropdown.update(event)
+        
+        self.dropdown.draw()           
+        
+        pygame.display.flip()
+        
+    
+            
+class Dropdown():
+    def __init__(self, screen, x, y):
+        self.screen = screen
+        self.x = x
+        self.y = y
         self.DROPDOWN_WIDTH = 150
         self.DROPDOWN_HEIGHT = 30
         
@@ -125,57 +147,52 @@ class Menu(Scene):
         self.FONT_SIZE = 24
         self.font = pygame.font.SysFont(None, self.FONT_SIZE)
         
+        
         self.show_options = False
         self.selected_option = 0
+        
+        self.dropdown_rect = pygame.Rect(100, 100, self.DROPDOWN_WIDTH, self.DROPDOWN_HEIGHT)
+        self.options = ["Option 1", "Option 2", "Option 3"]
         
         self.WHITE = (255, 255, 255)
         self.BLACK = (0, 0, 0)
         self.GRAY = (200, 200, 200)
         self.BG = (75, 85, 65)
         
-
-    def update(self, events):
-        self.screen.fill(self.background)
-        dropdown_rect = pygame.Rect(100, 100, self.DROPDOWN_WIDTH, self.DROPDOWN_HEIGHT)
-        options = ["Option 1", "Option 2", "Option 3"]
-        
-        self.screen.fill(self.BG)
-            
-        for event in events:
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if dropdown_rect.collidepoint(event.pos):
-                    self.show_options = not self.show_options
-                elif self.show_options:
-                    for i in range(len(options)):
-                        option_rect = pygame.Rect(100, 100 + self.DROPDOWN_HEIGHT + i * self.OPTION_HEIGHT, self.DROPDOWN_WIDTH, self.OPTION_HEIGHT)
-                        if option_rect.collidepoint(event.pos):
-                            self.selected_option = i
-                            logger.debug(f'Option {self.selected_option} selected')
-                            self.show_options = False
-            
-        self.draw_dropdown(100, 100, options, self.selected_option)
-        if self.show_options:
-            self.draw_options(100, 100 + self.DROPDOWN_HEIGHT, options, self.selected_option)
-                  
-        pygame.display.flip()
-        
-    def draw_dropdown(self, x, y, options, selected_option):
-        pygame.draw.rect(self.screen, self.GRAY, (x, y, self.DROPDOWN_WIDTH, self.DROPDOWN_HEIGHT))
-        pygame.draw.rect(self.screen, self.BLACK, (x, y, self.DROPDOWN_WIDTH, self.DROPDOWN_HEIGHT), 2)
-        
-        text = self.font.render(options[selected_option], True, self.BLACK)
-        text_rect = text.get_rect(center=(x + self.DROPDOWN_WIDTH // 2, y + self.DROPDOWN_HEIGHT // 2))
+    def update(self, event):
+        if self.dropdown_rect.collidepoint(event.pos):
+            self.show_options = not self.show_options
+        elif self.show_options:
+            for i in range(len(self.options)):
+                option_rect = pygame.Rect(100, 100 + self.DROPDOWN_HEIGHT + i * self.OPTION_HEIGHT, self.DROPDOWN_WIDTH, self.OPTION_HEIGHT)
+                if option_rect.collidepoint(event.pos):
+                    self.selected_option = i
+                    logger.debug(f'Option {self.selected_option} selected')
+                    self.show_options = False
+    
+    def draw(self):
+        pygame.draw.rect(self.screen, self.GRAY, (self.x, self.y, self.DROPDOWN_WIDTH, self.DROPDOWN_HEIGHT))
+        pygame.draw.rect(self.screen, self.BLACK, (self.x, self.y, self.DROPDOWN_WIDTH, self.DROPDOWN_HEIGHT), 2)
+        # self.draw_dropdown(100, 100, self.options, self.selected_option)
+        text = self.font.render(self.options[self.selected_option], True, self.BLACK)
+        text_rect = text.get_rect(center=(self.x + self.DROPDOWN_WIDTH // 2, self.y + self.DROPDOWN_HEIGHT // 2))
         self.screen.blit(text, text_rect)
-
-    def draw_options(self, x, y, options, selected_option):
-        for i, option in enumerate(options):
-            if i == selected_option:
+        if self.show_options:
+            self.draw_options()
+            
+    def draw_options(self):
+        x = self.x
+        y = self.y + self.DROPDOWN_HEIGHT
+        for i, option in enumerate(self.options):
+            if i == self.selected_option:
                 pygame.draw.rect(self.screen, self.GRAY, (x, y + i * self.OPTION_HEIGHT, self.DROPDOWN_WIDTH, self.OPTION_HEIGHT))
             pygame.draw.rect(self.screen, self.BLACK, (x, y + i * self.OPTION_HEIGHT, self.DROPDOWN_WIDTH, self.OPTION_HEIGHT), 2)
             
             text = self.font.render(option, True, self.BLACK)
             text_rect = text.get_rect(center=(x + self.DROPDOWN_WIDTH // 2, y + i * self.OPTION_HEIGHT + self.OPTION_HEIGHT // 2))
             self.screen.blit(text, text_rect)    
+    
+            
     
 class Input():
     def __init__(self):
