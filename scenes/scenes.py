@@ -18,7 +18,7 @@ class Scene():
     
 
 class Level(Scene):
-    def __init__(self, screen):
+    def __init__(self, screen, config_file):
         super().__init__(screen)
         self.background = (40, 40, 40)
         self.input = Input()
@@ -37,6 +37,20 @@ class Level(Scene):
         
         self.x_offset = 0.0
         self.y_offset = 0.0
+        
+        self.load_config(config_file)
+        
+    def load_config(self, config_file):
+        with open(config_file, 'r') as file:
+            config = json.load(file)
+            for enemy_config in config['enemies']:
+                enemy = Enemy(position = enemy_config['position'])
+                self.all_sprites.add(enemy)
+                self.enemies.add(enemy)
+            player = Player(position = config['player']['position'])
+            self.all_sprites.add(player)
+            self.player = player
+            self.map = config['map']
 
     def update(self, event):
         self.screen.fill(self.background)
@@ -115,20 +129,7 @@ class Level(Scene):
             self.all_sprites.change_layer(enemy, 1)
         logger.debug(f"Player {player} collided with Enemy {enemy}")
         
-    @classmethod
-    def from_config(cls, config_file, screen):
-        level = cls(screen)
-        with open(config_file, 'r') as f:
-            config = json.load(f)
-            for enemy_config in config['enemies']:
-                enemy = Enemy(position = enemy_config['position'])
-                level.all_sprites.add(enemy)
-                level.enemies.add(enemy)
-            player = Player(position = config['player']['position'])
-            level.all_sprites.add(player)
-            level.player = player
-            level.map = config['map']
-        return level
+    
     
 class Menu(Scene):
     def __init__(self, screen):
