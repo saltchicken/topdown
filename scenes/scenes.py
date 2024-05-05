@@ -62,17 +62,17 @@ class Level(Scene):
             self.y_offset -= self.input.y_axis * self.player.move_speed
 
         self.draw_map()
+        self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
         self.visual_collisions()
                 
         pygame.display.flip()
     
     def draw_hitboxes(self):
-        self.all_sprites.draw(self.screen)
         if self.player:
-            self.player.draw_hitbox(self.screen)
+            self.player.draw_hitbox(self.screen, self.player.visual_hitbox)
         for enemy in self.enemies:
-            enemy.draw_hitbox(self.screen)
+            enemy.draw_hitbox(self.screen, enemy.visual_hitbox)
         
     def draw_map(self):
         # for row_i, row in enumerate(self.map):

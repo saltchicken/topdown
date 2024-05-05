@@ -93,17 +93,16 @@ class Body(pygame.sprite.Sprite):
                             self.state.current_action.hitbox[action_frame][2],
                             self.state.current_action.hitbox[action_frame][3])
         
-    def draw_hitbox(self, screen):
-        pygame.draw.rect(screen, (255,255,255), self.hitbox, 1)
+    def draw_hitbox(self, screen, hitbox):
+        pygame.draw.rect(screen, (255,255,255), hitbox, 1)
 
 class Player(Body):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.state = State('player2')
         self.move_speed = 3
-        # self.input = Input()
         self.grid_y_offset = 54
-        # Set x to _x to call the setter method. Needed or initialization is buggy due to self.input
+        # Set x to _x to call the setter method. Needed or initialization is buggy due to initializing setter method.
         self.x = self._x
         self.y = self._y
         
