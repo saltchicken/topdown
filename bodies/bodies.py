@@ -22,7 +22,7 @@ class Body(pygame.sprite.Sprite):
         self.grid_x = int(self._x // GRID)
         self.grid_y = int((self._y + self.grid_y_offset) // GRID)
         
-        self.hitbox = None
+        self.hitbox = self.get_hitbox()
         self.visual_hitbox = None
 
     @property
@@ -81,19 +81,19 @@ class Body(pygame.sprite.Sprite):
                             self.state.current_action.visual_hitbox[action_frame][3])
         
     def get_lookahead_hitbox(self, input):
-        action_frame = self.state.current_action.animation.frame_i
-        return pygame.Rect( self.rect.x + self.state.current_action.hitbox[action_frame][0] + input.x_axis * 5,
-                            self.rect.y + self.state.current_action.hitbox[action_frame][1] + input.y_axis * 5,
-                            self.state.current_action.hitbox[action_frame][2],
-                            self.state.current_action.hitbox[action_frame][3])
+        return pygame.Rect(self.hitbox[0] + input.x_axis * 5,
+                           self.hitbox[1] + input.y_axis * 5,
+                           self.hitbox[2],
+                           self.hitbox[3])
         
     def draw_hitbox(self, screen, hitbox):
         pygame.draw.rect(screen, (255,255,255), hitbox, 1)
 
 class Player(Body):
     def __init__(self, *args, **kwargs):
-        super().__init__(**kwargs)
         self.state = State('player2')
+        super().__init__(**kwargs)
+        
         self.move_speed = 3
         self.grid_y_offset = 54
         # Set x to _x to call the setter method. Needed or initialization is buggy due to initializing setter method.
@@ -144,8 +144,9 @@ class Player(Body):
 
 class Enemy(Body):
     def __init__(self, *args, **kwargs):
-        super().__init__(**kwargs)
         self.state = State('enemy')
+        super().__init__(**kwargs)
+        
         # self.image.fill((0,255,0))
         self.move_speed = 2
         
