@@ -30,15 +30,11 @@ class Level(Scene):
         
         self.player_collision = False
         
-        # TODO: Clean this up for dealing with where center of camera is
-        self.map_center = (11, 9)
-        self.row_length = 22
-        self.col_length = 18
-        
-        self.offset = [0.0, 0.0]
+        self.camera = Camera()
         
         self.load_config(config_file)
         
+        # TODO: This is needed to initialize sprites or else it throws attribute errors. Figure out a way so this is unneeded as it may cause unwanted stuff to happen.
         self.all_sprites.update(self.input, self.player.move_speed, self.player_collision)
         
     def load_config(self, config_file):
@@ -59,15 +55,15 @@ class Level(Scene):
         self.collision_look_ahead()
         self.all_sprites.update(self.input, self.player.move_speed, self.player_collision)
         if not self.player_collision:     
-            self.offset[0] -= self.input.x_axis * self.player.move_speed
-            self.offset[1] -= self.input.y_axis * self.player.move_speed
+            self.camera.offset[0] -= self.input.x_axis * self.player.move_speed
+            self.camera.offset[1] -= self.input.y_axis * self.player.move_speed
             # TODO: better way to deal with precision error
-            self.offset = [round(self.offset[0], 5), round(self.offset[1], 5)]
-            # self.x_offset = round(self.x_offset, 5)
-            # self.y_offset = round(self.y_offset, 5)
-            self.center_offset = [self.offset[0] // 64, self.offset[1] // 64]
-            # self.center_x_offset = self.x_offset // 64
-            # self.center_y_offset = self.y_offset // 64
+            self.camera.offset = [round(self.camera.offset[0], 5), round(self.camera.offset[1], 5)]
+            # self.x_camera.offset = round(self.x_camera.offset, 5)
+            # self.y_camera.offset = round(self.y_camera.offset, 5)
+            self.center_offset = [self.camera.offset[0] // 64, self.camera.offset[1] // 64]
+            # self.center_x_offset = self.x_camera.offset // 64
+            # self.center_y_offset = self.y_camera.offset // 64
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
@@ -85,15 +81,11 @@ class Level(Scene):
             enemy.draw_hitbox(self.screen, enemy.visual_hitbox)
         
     def draw_map(self):
-        # # This will not work because it blits the entire map. Too expensive. Leaving in remembrance
-        # for row_i, row in enumerate(self.map):
-        #     for col_i, col in enumerate(row):
-        #         self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.x_offset, self.y_offset)
         # TODO: Cleanup variable names
-        map_center = [int(self.map_center[0] - self.center_offset[0]), int(self.map_center[1] - self.center_offset[1])]
-        for row_i, row in enumerate(self.map[map_center[1] - self.col_length // 2 : map_center[1] + self.col_length // 2]):
-            for col_i, col in enumerate(row[map_center[0] - self.row_length // 2 : map_center[0] + self.row_length // 2]):
-                self.texture.draw_grid(self.screen, col, col_i - 1 - self.center_offset[0], row_i - 1 - self.center_offset[1], self.offset[0], self.offset[1])
+        map_center = [int(self.camera.map_center[0] - self.center_offset[0]), int(self.camera.map_center[1] - self.center_offset[1])]
+        for row_i, row in enumerate(self.map[map_center[1] - self.camera.col_length // 2 : map_center[1] + self.camera.col_length // 2]):
+            for col_i, col in enumerate(row[map_center[0] - self.camera.row_length // 2 : map_center[0] + self.camera.row_length // 2]):
+                self.texture.draw_grid(self.screen, col, col_i - 1 - self.center_offset[0], row_i - 1 - self.center_offset[1], self.camera.offset[0], self.camera.offset[1])
 
     def collision_look_ahead(self):
         hitbox = self.player.get_lookahead_hitbox(self.input)
@@ -208,6 +200,13 @@ class Dropdown(Field):
             self.screen.blit(text, text_rect)    
     
             
+class Camera():
+    def __init__(self):
+        self.map_center = (11, 9)
+        self.row_length = 22
+        self.col_length = 18
+        self.offset = [0.0, 0.0]
+        
     
 class Input():
     def __init__(self):
