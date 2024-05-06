@@ -62,11 +62,19 @@ class Level(Scene):
         if not self.player_collision:     
             self.x_offset -= self.input.x_axis * self.player.move_speed
             self.y_offset -= self.input.y_axis * self.player.move_speed
+            # TODO: better way to deal with precision error
+            self.x_offset = round(self.x_offset, 5)
+            self.y_offset = round(self.y_offset, 5)
+            self.center_x_offset = self.x_offset // 64
+            self.center_y_offset = self.y_offset // 64
+            print(self.center_x_offset, self.center_y_offset)
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
         self.visual_collisions()
+        
+        
                 
         pygame.display.flip()
     
@@ -77,12 +85,17 @@ class Level(Scene):
             enemy.draw_hitbox(self.screen, enemy.visual_hitbox)
         
     def draw_map(self):
+        # # This will not work because it blits the entire map. Too expensive. Leaving in remembrance
         # for row_i, row in enumerate(self.map):
         #     for col_i, col in enumerate(row):
         #         self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.x_offset, self.y_offset)
-        for row_i, row in enumerate(self.map[self.map_center[1] - self.col_length // 2 : self.map_center[1] + self.col_length // 2]):
-            for col_i, col in enumerate(row[self.map_center[0] - self.row_length // 2 : self.map_center[0] + self.row_length // 2]):
-                self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.x_offset, self.y_offset)
+        # TODO: Cleanup variable names
+        map_center = [int(self.map_center[0] - self.center_x_offset), int(self.map_center[1] - self.center_y_offset)]
+        col_i_offset = int(self.center_x_offset)
+        row_i_offset = int(self.center_y_offset)
+        for row_i, row in enumerate(self.map[map_center[1] - self.col_length // 2 : map_center[1] + self.col_length // 2]):
+            for col_i, col in enumerate(row[map_center[0] - self.row_length // 2 : map_center[0] + self.row_length // 2]):
+                self.texture.draw_grid(self.screen, col, col_i - 1 - col_i_offset, row_i - 1 - row_i_offset, self.x_offset, self.y_offset)
 
     def collision_look_ahead(self):
         hitbox = self.player.get_lookahead_hitbox(self.input)

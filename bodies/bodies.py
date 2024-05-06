@@ -156,6 +156,9 @@ class Enemy(Body):
         if not player_collision:
             self.x -= self.input.x_axis * player_speed
             self.y -= self.input.y_axis * player_speed
+            # TODO: better way to deal with the precision error
+            self.x = round(self.x, 5)
+            self.y = round(self.y, 5)
             # self.x += 0.1 * self.move_speed
             # self.y += 0.1 * self.move_speed
         
