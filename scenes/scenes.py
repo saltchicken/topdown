@@ -57,7 +57,6 @@ class Level(Scene):
         if not self.player_collision:     
             self.camera.x -= self.input.x_axis * self.player.move_speed
             self.camera.y -= self.input.y_axis * self.player.move_speed
-            self.center_offset = [self.camera.x // 64, self.camera.y // 64]
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
@@ -76,10 +75,9 @@ class Level(Scene):
         
     def draw_map(self):
         # TODO: Cleanup variable names
-        map_center = [int(self.camera.map_center[0] - self.center_offset[0]), int(self.camera.map_center[1] - self.center_offset[1])]
-        for row_i, row in enumerate(self.map[map_center[1] - self.camera.col_length // 2 : map_center[1] + self.camera.col_length // 2]):
-            for col_i, col in enumerate(row[map_center[0] - self.camera.row_length // 2 : map_center[0] + self.camera.row_length // 2]):
-                self.texture.draw_grid(self.screen, col, col_i - 1 - self.center_offset[0], row_i - 1 - self.center_offset[1], self.camera.x, self.camera.y)
+        for row_i, row in enumerate(self.map[self.camera.y_slice]):
+            for col_i, col in enumerate(row[self.camera.x_slice]):
+                self.texture.draw_grid(self.screen, col, col_i - 1 - self.camera.center_offset[0], row_i - 1 - self.camera.center_offset[1], self.camera.x, self.camera.y)
 
     def collision_look_ahead(self):
         hitbox = self.player.get_lookahead_hitbox(self.input)
@@ -201,6 +199,16 @@ class Camera():
         self.col_length = 18
         self._x = 0.0
         self._y = 0.0
+        self.center_offset = [0.0, 0.0]
+        
+        # map_center = [int(self.map_center[0] - self.center_offset[0]), int(self.map_center[1] - self.center_offset[1])]
+        # map_center[0] - self.camera.row_length // 2 : map_center[0] + self.camera.row_length // 2
+        self.y_slice = slice(int(self.map_center[1] - self.center_offset[1] - self.col_length // 2), 
+                             int(self.map_center[1] - self.center_offset[1] + self.col_length // 2)
+                             )
+        self.x_slice = slice(int(self.map_center[0] - self.center_offset[0] - self.row_length // 2), 
+                             int(self.map_center[0] - self.center_offset[0] + self.row_length // 2)
+                             )
         
     @property
     def x(self):
@@ -214,11 +222,19 @@ class Camera():
     def x(self, value):
         # TODO: Find better way to deal with precision issue
         self._x = round(value, 5)
+        self.center_offset[0] = self._x // 64
+        self.x_slice = slice(int(self.map_center[0] - self.center_offset[0] - self.row_length // 2), 
+                             int(self.map_center[0] - self.center_offset[0] + self.row_length // 2)
+                             )
 
     @y.setter
     def y(self, value):
         # TODO: Find better way to deal with precision issue
         self._y = round(value, 5)
+        self.center_offset[1] = self._y // 64
+        self.y_slice = slice(int(self.map_center[1] - self.center_offset[1] - self.col_length // 2), 
+                             int(self.map_center[1] - self.center_offset[1] + self.col_length // 2)
+                             )
         
     
 class Input():
