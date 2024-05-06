@@ -35,14 +35,16 @@ class Body(pygame.sprite.Sprite):
     
     @x.setter
     def x(self, value):
-        self._x = value
+        # TODO: Find better way to deal with precision issue
+        self._x = round(value, 5)
         self.rect.x = int(self._x - self.WIDTH / 2)
         self.grid_x = int(self._x // GRID)
         # max(0, min(player_rect.x, SCREEN_WIDTH - player_rect.width))
 
     @y.setter
     def y(self, value):
-        self._y = value
+        # TODO: Find better way to deal with precision issue
+        self._y = round(value, 5)
         self.rect.y = int(self._y - self.HEIGHT / 2)
         self.grid_y = int((self._y + self.grid_y_offset) // GRID)
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
@@ -156,9 +158,6 @@ class Enemy(Body):
         if not player_collision:
             self.x -= self.input.x_axis * player_speed
             self.y -= self.input.y_axis * player_speed
-            # TODO: better way to deal with the precision error
-            self.x = round(self.x, 5)
-            self.y = round(self.y, 5)
             # self.x += 0.1 * self.move_speed
             # self.y += 0.1 * self.move_speed
         
