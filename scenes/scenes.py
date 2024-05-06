@@ -55,15 +55,9 @@ class Level(Scene):
         self.collision_look_ahead()
         self.all_sprites.update(self.input, self.player.move_speed, self.player_collision)
         if not self.player_collision:     
-            self.camera.offset[0] -= self.input.x_axis * self.player.move_speed
-            self.camera.offset[1] -= self.input.y_axis * self.player.move_speed
-            # TODO: better way to deal with precision error
-            self.camera.offset = [round(self.camera.offset[0], 5), round(self.camera.offset[1], 5)]
-            # self.x_camera.offset = round(self.x_camera.offset, 5)
-            # self.y_camera.offset = round(self.y_camera.offset, 5)
-            self.center_offset = [self.camera.offset[0] // 64, self.camera.offset[1] // 64]
-            # self.center_x_offset = self.x_camera.offset // 64
-            # self.center_y_offset = self.y_camera.offset // 64
+            self.camera.x -= self.input.x_axis * self.player.move_speed
+            self.camera.y -= self.input.y_axis * self.player.move_speed
+            self.center_offset = [self.camera.x // 64, self.camera.y // 64]
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
@@ -85,7 +79,7 @@ class Level(Scene):
         map_center = [int(self.camera.map_center[0] - self.center_offset[0]), int(self.camera.map_center[1] - self.center_offset[1])]
         for row_i, row in enumerate(self.map[map_center[1] - self.camera.col_length // 2 : map_center[1] + self.camera.col_length // 2]):
             for col_i, col in enumerate(row[map_center[0] - self.camera.row_length // 2 : map_center[0] + self.camera.row_length // 2]):
-                self.texture.draw_grid(self.screen, col, col_i - 1 - self.center_offset[0], row_i - 1 - self.center_offset[1], self.camera.offset[0], self.camera.offset[1])
+                self.texture.draw_grid(self.screen, col, col_i - 1 - self.center_offset[0], row_i - 1 - self.center_offset[1], self.camera.x, self.camera.y)
 
     def collision_look_ahead(self):
         hitbox = self.player.get_lookahead_hitbox(self.input)
@@ -205,7 +199,26 @@ class Camera():
         self.map_center = (11, 9)
         self.row_length = 22
         self.col_length = 18
-        self.offset = [0.0, 0.0]
+        self._x = 0.0
+        self._y = 0.0
+        
+    @property
+    def x(self):
+        return self._x
+    
+    @property
+    def y(self):
+        return self._y
+    
+    @x.setter
+    def x(self, value):
+        # TODO: Find better way to deal with precision issue
+        self._x = round(value, 5)
+
+    @y.setter
+    def y(self, value):
+        # TODO: Find better way to deal with precision issue
+        self._y = round(value, 5)
         
     
 class Input():
