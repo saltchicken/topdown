@@ -200,15 +200,7 @@ class Camera():
         self._x = 0.0
         self._y = 0.0
         self.center_offset = [0.0, 0.0]
-        
-        # map_center = [int(self.map_center[0] - self.center_offset[0]), int(self.map_center[1] - self.center_offset[1])]
-        # map_center[0] - self.camera.row_length // 2 : map_center[0] + self.camera.row_length // 2
-        self.y_slice = slice(int(self.map_center[1] - self.center_offset[1] - self.col_length // 2), 
-                             int(self.map_center[1] - self.center_offset[1] + self.col_length // 2)
-                             )
-        self.x_slice = slice(int(self.map_center[0] - self.center_offset[0] - self.row_length // 2), 
-                             int(self.map_center[0] - self.center_offset[0] + self.row_length // 2)
-                             )
+
         
     @property
     def x(self):
