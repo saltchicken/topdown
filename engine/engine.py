@@ -13,7 +13,7 @@ class Topdown:
         # self.set_screen_size(fullscreen=True)
         pygame.display.set_caption("Topdown")
         self.scenes = {}
-        self.scenes['level'] = Level(self.screen, Path('scenes/assets/scene2.json'))
+        self.scenes['level'] = Level(self.screen, Path('scenes/assets/scene3.json'))
         self.scenes['menu'] = Menu(self.screen)
         self.set_scene('menu')
         self.clock = pygame.time.Clock()
