@@ -13,8 +13,11 @@ class Texture():
         with open(f'{self.texture_file_path}/{texture_name}.json') as info_file:    
             self.info = json.load(info_file)
             
-    def draw(self, screen, xy, x_offset = None, y_offset = None):
-        screen.blit(self.texture, (xy[0] + x_offset, xy[1] + y_offset))
+    def draw(self, screen, xy, camera = None):
+        if camera:
+            screen.blit(self.texture, (xy[0] + camera.x, xy[1] + camera.y))
+        else:
+            screen.blit(self.texture, (xy[0], xy[1]))
         
 
 class TextureMaster():
@@ -35,15 +38,20 @@ class TextureMaster():
             return None
         texture.draw(screen, (x,y))
         
-    def draw_grid(self, screen, texture_map, x, y, x_offset = None, y_offset = None):
+    def draw_grid(self, screen, texture_map, x, y, camera = None):
         try:
             texture = self.textures[self.texture_mapping[texture_map]]
         except KeyError:
             print("Invalid texture. TODO: Create a default texture. Available textures are:", list(self.textures.keys()))
             # TODO: Probably shouldn't return None. Find better way to handle error like create a default texture
             return None
-        
-        texture.draw(screen, (x * GRID, y * GRID), x_offset, y_offset)    
+        if camera:
+            x -= camera.center_offset[0]
+            y -= camera.center_offset[1]
+            
+            texture.draw(screen, (x * GRID, y * GRID), camera)
+        else:
+            texture.draw(screen, (x * GRID, y * GRID))    
         
         
     def fill_screen_tile(self, screen, texture_name):

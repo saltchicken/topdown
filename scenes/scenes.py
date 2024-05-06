@@ -77,7 +77,7 @@ class Level(Scene):
         # TODO: Cleanup variable names
         for row_i, row in enumerate(self.map[self.camera.y_slice]):
             for col_i, col in enumerate(row[self.camera.x_slice]):
-                self.texture.draw_grid(self.screen, col, col_i - 1 - self.camera.center_offset[0], row_i - 1 - self.camera.center_offset[1], self.camera.x, self.camera.y)
+                self.texture.draw_grid(self.screen, col, col_i - 1, row_i - 1, self.camera)
 
     def collision_look_ahead(self):
         hitbox = self.player.get_lookahead_hitbox(self.input)
