@@ -67,7 +67,6 @@ class Level(Scene):
             self.y_offset = round(self.y_offset, 5)
             self.center_x_offset = self.x_offset // 64
             self.center_y_offset = self.y_offset // 64
-            print(self.center_x_offset, self.center_y_offset)
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
