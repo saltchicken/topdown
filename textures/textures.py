@@ -21,7 +21,7 @@ class TextureMaster():
         self.textures = {}
         self.texture_mapping = {0: 'road', 1: 'grass'}
         directory = 'textures/assets/'
-        # TODO: Set profile selection for TextureMaster
+        # TODO: Set profile selection for TextureMaster. Create json for texture mapping.
         for texture in os.listdir(f'{directory}{profile}'):
             self.textures[texture] = Texture(f'{directory}{profile}/{texture}')
 
