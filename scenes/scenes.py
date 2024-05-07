@@ -29,15 +29,13 @@ class Level(Scene):
         self.texture = TextureMaster()
         self.map = None
 
-        self.player_collision = False
-
         self.camera = Camera((21, 9))
 
         self.load_config(config_file)
 
         # TODO: This is needed to initialize sprites or else it throws attribute errors. Figure out a way so this is unneeded as it may cause unwanted stuff to happen.
         self.all_sprites.update(
-            self.input, self.player.move_speed, self.player_collision)
+            self.input, self.player.move_speed, False)
 
     def load_config(self, config_file):
         with open(config_file, 'r') as file:
@@ -54,9 +52,9 @@ class Level(Scene):
     def update(self, events):
         self.screen.fill(self.background)
         self.input.update()
-        self.collision_look_ahead()
+        player_collision = self.collision_look_ahead()
         self.all_sprites.update(
-            self.input, self.player.move_speed, self.player_collision)
+            self.input, self.player.move_speed, player_collision)
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
@@ -80,13 +78,12 @@ class Level(Scene):
 
     def collision_look_ahead(self):
         hitbox = self.player.get_lookahead_hitbox(self.input)
-        self.player_collision = False
         for enemy in self.enemies:
             if enemy.hitbox:
                 if hitbox.colliderect(enemy.hitbox):
-                    self.player_collision = True
-                    logger.debug(f"Player collision lookahead: {
-                                 self.player_collision}")
+                    logger.debug(f"Player collision")
+                    return True
+        return False
 
     def visual_collisions(self):
         if self.player:
