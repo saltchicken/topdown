@@ -1,27 +1,28 @@
+"""
+This module provides functions in relation to the bodies of the engine.
+"""
+
 import json
 import os
+from dataclasses import dataclass
 import pygame
 
-from loguru import logger
 
-from dataclasses import dataclass
 
 GRID = 64
 
 class Body(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
-        self.WIDTH, self.HEIGHT = 128, 128 
+        self.WIDTH, self.HEIGHT = 128, 128
         self.image = pygame.Surface((self.WIDTH, self.HEIGHT))
         self.rect = self.image.get_rect()
         self._x = float(self.WIDTH / 2) + float(position[0])
         self._y = float(self.HEIGHT / 2) + float(position[1])
-        # TODO: Some sort of grid offset is needed for x but in both directions. Address interacting with a side square
-        self.grid_x_offset = 0
+        # self.grid_x_offset = 0
         self.grid_y_offset = 0
         self.grid_x = int(self._x // GRID)
         self.grid_y = int((self._y + self.grid_y_offset) // GRID)
-        
         self.hitbox = self.get_hitbox()
         self.visual_hitbox = None
 
@@ -170,7 +171,7 @@ class State:
         self.actions = {}
         directory = 'bodies/assets/'
         for action in os.listdir(f'{directory}{profile}'):
-            with open(f'{directory}{profile}/{action}/{action}.json') as info_file:    
+            with open(f'{directory}{profile}/{action}/{action}.json') as info_file:
                 action_info = json.load(info_file)
             self.actions[action] = Action(  action_info['width'], 
                                             action_info['height'], 
@@ -196,22 +197,22 @@ class State:
     
 @dataclass
 class Action():
-        # action: str
-        width: int
-        height: int
-        sprite_sheet_filepath: str
-        count:int
-        loop: bool
-        frames: int
-        hitbox: list
-        visual_hitbox: list
+    # action: str
+    width: int
+    height: int
+    sprite_sheet_filepath: str
+    count:int
+    loop: bool
+    frames: int
+    hitbox: list
+    visual_hitbox: list
         
-        def __post_init__(self):
-            self.animation = self.load_animation()
+    def __post_init__(self):
+        self.animation = self.load_animation()
         
-        def load_animation(self):
-            # return SpriteStripAnim(self.sprite_sheet_filepath, (0,0,128,128), self.count, (0, 0, 0), self.loop, 8)
-            return SpriteStripAnim(self.sprite_sheet_filepath, rect=(0,0,self.width, self.height), count=self.count, loop=self.loop, frames=self.frames)
+    def load_animation(self):
+        # return SpriteStripAnim(self.sprite_sheet_filepath, (0,0,128,128), self.count, (0, 0, 0), self.loop, 8)
+        return SpriteStripAnim(self.sprite_sheet_filepath, rect=(0,0,self.width, self.height), count=self.count, loop=self.loop, frames=self.frames)
         
 class spritesheet(object):
     def __init__(self, filename):

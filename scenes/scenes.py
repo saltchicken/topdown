@@ -115,8 +115,6 @@ class Menu(Scene):
         self.fields['option_dropdown'] = Dropdown(self.screen, 100, 100)
         self.fields['edit_dropdown'] = Dropdown(self.screen, 300, 100)
         
-        
-
     def update(self, events):
         self.screen.fill(self.background)
         
@@ -136,8 +134,7 @@ class Field():
         self.screen = screen
         self.x = x
         self.y = y
-         
-            
+              
 class Dropdown(Field):
     def __init__(self, screen, x, y):
         super().__init__(screen, x, y)
@@ -191,7 +188,6 @@ class Dropdown(Field):
             text_rect = text.get_rect(center=(x + self.DROPDOWN_WIDTH // 2, y + i * self.OPTION_HEIGHT + self.OPTION_HEIGHT // 2))
             self.screen.blit(text, text_rect)    
     
-            
 class Camera():
     def __init__(self, init_pos):
         self.init_pos = init_pos
