@@ -10,7 +10,7 @@ class Texture():
         self.texture_file_path = texture_file_path
         texture_name = os.path.splitext(
             os.path.basename(self.texture_file_path))[0]
-        self.texture = pygame.image.load(
+        self.image = pygame.image.load(
             f'{self.texture_file_path}/{texture_name}.png')
 
         with open(f'{self.texture_file_path}/{texture_name}.json') as info_file:
@@ -26,16 +26,10 @@ class TextureMaster():
             self.textures[texture] = Texture(f'{directory}{profile}/{texture}')
 
     def draw_grid(self, screen, texture_map, x, y, camera=None):
-        try:
-            texture = self.textures[self.texture_mapping[texture_map]]
-        except KeyError:
-            print("Invalid texture. TODO: Create a default texture. Available textures are:", list(
-                self.textures.keys()))
-            # TODO: Probably shouldn't return None. Find better way to handle error like create a default texture
-            return None
+        texture = self.textures[self.texture_mapping[texture_map]]
         if camera:
             x -= camera.x // 64
             y -= camera.y // 64
-            screen.blit(texture.texture, (x * GRID + camera.x, y * GRID + camera.y))
+            screen.blit(texture.image, (x * GRID + camera.x, y * GRID + camera.y))
         else:
-            screen.blit(texture.texture, (x * GRID, y * GRID))
+            screen.blit(texture.image, (x * GRID, y * GRID))
