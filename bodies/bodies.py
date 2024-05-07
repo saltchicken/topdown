@@ -96,8 +96,9 @@ class Body(pygame.sprite.Sprite):
 
 
 class Player(Body):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, camera, *args, **kwargs):
         self.state = State('player2')
+        self.camera = camera
         super().__init__(**kwargs)
 
         self.move_speed = 3
@@ -109,7 +110,9 @@ class Player(Body):
         self.layer = 0
 
     def physics(self, player_speed, player_collision):
-        pass
+        if not player_collision:
+            self.camera.x -= self.input.x_axis * self.move_speed
+            self.camera.y -= self.input.y_axis * self.move_speed
         # if abs(self.input.x_axis) > 0:
         #     self.x += self.input.x_axis * self.move_speed
         # if abs(self.input.y_axis) > 0:

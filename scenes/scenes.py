@@ -46,7 +46,7 @@ class Level(Scene):
                 enemy = Enemy(position=enemy_config['position'])
                 self.all_sprites.add(enemy)
                 self.enemies.add(enemy)
-            player = Player(position=config['player']['position'])
+            player = Player(self.camera, position=config['player']['position'])
             self.all_sprites.add(player)
             self.player = player
             self.map = config['map']
@@ -57,9 +57,6 @@ class Level(Scene):
         self.collision_look_ahead()
         self.all_sprites.update(
             self.input, self.player.move_speed, self.player_collision)
-        if not self.player_collision:
-            self.camera.x -= self.input.x_axis * self.player.move_speed
-            self.camera.y -= self.input.y_axis * self.player.move_speed
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
