@@ -26,7 +26,7 @@ class Level(Scene):
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.player = None
         self.enemies = pygame.sprite.Group()
-        self.texture = TextureMaster()
+        self.texture = TextureMaster(screen)
         self.map = None
 
         self.camera = Camera((21, 9))
@@ -71,8 +71,7 @@ class Level(Scene):
     def draw_map(self):
         for row_i, row in enumerate(self.map[self.camera.y_slice]):
             for col_i, col in enumerate(row[self.camera.x_slice]):
-                self.texture.draw_grid(
-                    self.screen, col, col_i - 1, row_i - 1, self.camera)
+                self.texture.draw_grid(col, col_i - 1, row_i - 1, self.camera)
 
     def collision_look_ahead(self):
         hitbox = self.player.get_lookahead_hitbox(self.input)

@@ -17,7 +17,8 @@ class Texture():
             self.info = json.load(info_file)
 
 class TextureMaster():
-    def __init__(self, profile=''):
+    def __init__(self, screen, profile=''):
+        self.screen = screen
         self.textures = {}
         self.texture_mapping = {0: 'road', 1: 'grass'}
         directory = 'textures/assets/'
@@ -25,11 +26,11 @@ class TextureMaster():
         for texture in os.listdir(f'{directory}{profile}'):
             self.textures[texture] = Texture(f'{directory}{profile}/{texture}')
 
-    def draw_grid(self, screen, texture_map, x, y, camera=None):
+    def draw_grid(self, texture_map, x, y, camera=None):
         texture = self.textures[self.texture_mapping[texture_map]]
         if camera:
             x -= camera.x // 64
             y -= camera.y // 64
-            screen.blit(texture.image, (x * GRID + camera.x, y * GRID + camera.y))
+            self.screen.blit(texture.image, (x * GRID + camera.x, y * GRID + camera.y))
         else:
-            screen.blit(texture.image, (x * GRID, y * GRID))
+            self.screen.blit(texture.image, (x * GRID, y * GRID))
