@@ -52,9 +52,8 @@ class Level(Scene):
     def update(self, events):
         self.screen.fill(self.background)
         self.input.update()
-        player_collision = self.collision_look_ahead()
         self.all_sprites.update(
-            self.input, self.player.move_speed, player_collision)
+            self.input, self.player.move_speed, self.collision_look_ahead())
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
@@ -70,7 +69,6 @@ class Level(Scene):
             enemy.draw_hitbox(self.screen, enemy.visual_hitbox)
 
     def draw_map(self):
-        # TODO: Cleanup variable names
         for row_i, row in enumerate(self.map[self.camera.y_slice]):
             for col_i, col in enumerate(row[self.camera.x_slice]):
                 self.texture.draw_grid(
