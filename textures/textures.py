@@ -25,16 +25,6 @@ class TextureMaster():
         for texture in os.listdir(f'{directory}{profile}'):
             self.textures[texture] = Texture(f'{directory}{profile}/{texture}')
 
-    # def draw_tile(self, screen, texture_name, x, y):
-    #     try:
-    #         texture = self.textures[texture_name]
-    #     except KeyError:
-    #         print("Invalid texture. TODO: Create a default texture. Available textures are:", list(
-    #             self.textures.keys()))
-    #         # TODO: Probably shouldn't return None. Find better way to handle error like create a default texture
-    #         return None
-    #     texture.draw(screen, (x, y))
-
     def draw_grid(self, screen, texture_map, x, y, camera=None):
         try:
             texture = self.textures[self.texture_mapping[texture_map]]
@@ -49,11 +39,3 @@ class TextureMaster():
             screen.blit(texture.texture, (x * GRID + camera.x, y * GRID + camera.y))
         else:
             screen.blit(texture.texture, (x * GRID, y * GRID))
-
-    # def fill_screen_tile(self, screen, texture_name):
-    #     info = pygame.display.Info()
-    #     WIDTH, HEIGHT = info.current_w, info.current_h
-    #     # TODO: Remove magic number of 64 (width of texture)
-    #     for y in range(0, HEIGHT, 64):
-    #         for x in range(0, WIDTH, 64):
-    #             self.draw_tile(screen, texture_name, x, y)
