@@ -4,56 +4,60 @@ import json
 
 GRID = 64
 
+
 class Texture():
     def __init__(self, texture_file_path):
         self.texture_file_path = texture_file_path
-        texture_name = os.path.splitext(os.path.basename(self.texture_file_path))[0]
-        self.texture = pygame.image.load(f'{self.texture_file_path}/{texture_name}.png')
-        
-        with open(f'{self.texture_file_path}/{texture_name}.json') as info_file:    
+        texture_name = os.path.splitext(
+            os.path.basename(self.texture_file_path))[0]
+        self.texture = pygame.image.load(
+            f'{self.texture_file_path}/{texture_name}.png')
+
+        with open(f'{self.texture_file_path}/{texture_name}.json') as info_file:
             self.info = json.load(info_file)
-            
-    def draw(self, screen, xy, camera = None):
+
+    def draw(self, screen, xy, camera=None):
         if camera:
             screen.blit(self.texture, (xy[0] + camera.x, xy[1] + camera.y))
         else:
             screen.blit(self.texture, (xy[0], xy[1]))
-        
+
 
 class TextureMaster():
-    def __init__(self, profile = ''):
+    def __init__(self, profile=''):
         self.textures = {}
         self.texture_mapping = {0: 'road', 1: 'grass'}
         directory = 'textures/assets/'
-        #TODO: Set profile selection for TextureMaster
+        # TODO: Set profile selection for TextureMaster
         for texture in os.listdir(f'{directory}{profile}'):
             self.textures[texture] = Texture(f'{directory}{profile}/{texture}')
-            
+
     def draw_tile(self, screen, texture_name, x, y):
         try:
             texture = self.textures[texture_name]
         except KeyError:
-            print("Invalid texture. TODO: Create a default texture. Available textures are:", list(self.textures.keys()))
+            print("Invalid texture. TODO: Create a default texture. Available textures are:", list(
+                self.textures.keys()))
             # TODO: Probably shouldn't return None. Find better way to handle error like create a default texture
             return None
-        texture.draw(screen, (x,y))
-        
-    def draw_grid(self, screen, texture_map, x, y, camera = None):
+        texture.draw(screen, (x, y))
+
+    def draw_grid(self, screen, texture_map, x, y, camera=None):
         try:
             texture = self.textures[self.texture_mapping[texture_map]]
         except KeyError:
-            print("Invalid texture. TODO: Create a default texture. Available textures are:", list(self.textures.keys()))
+            print("Invalid texture. TODO: Create a default texture. Available textures are:", list(
+                self.textures.keys()))
             # TODO: Probably shouldn't return None. Find better way to handle error like create a default texture
             return None
         if camera:
             x -= camera.x // 64
             y -= camera.y // 64
-            
+
             texture.draw(screen, (x * GRID, y * GRID), camera)
         else:
-            texture.draw(screen, (x * GRID, y * GRID))    
-        
-        
+            texture.draw(screen, (x * GRID, y * GRID))
+
     def fill_screen_tile(self, screen, texture_name):
         info = pygame.display.Info()
         WIDTH, HEIGHT = info.current_w, info.current_h

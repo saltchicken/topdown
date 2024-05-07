@@ -6,6 +6,7 @@ from loguru import logger
 
 from scenes.scenes import Level, Menu
 
+
 class Topdown:
     def __init__(self):
         pygame.init()
@@ -13,11 +14,12 @@ class Topdown:
         # self.set_screen_size(fullscreen=True)
         pygame.display.set_caption("Topdown")
         self.scenes = {}
-        self.scenes['level'] = Level(self.screen, Path('scenes/assets/scene3.json'))
+        self.scenes['level'] = Level(
+            self.screen, Path('scenes/assets/scene3.json'))
         self.scenes['menu'] = Menu(self.screen)
         self.set_scene('menu')
         self.clock = pygame.time.Clock()
-        
+
     def loop(self):
         self.running = True
         while self.running:
@@ -25,22 +27,24 @@ class Topdown:
             self.current_scene.update(events)
             self.clock.tick(90)
         self.exit()
-        
+
     def set_screen_size(self, width=None, height=None, fullscreen=False):
         if fullscreen or width == None or height == None:
             info = pygame.display.Info()
             self.WIDTH, self.HEIGHT = info.current_w, info.current_h
-            self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), pygame.FULLSCREEN)
+            self.screen = pygame.display.set_mode(
+                (self.WIDTH, self.HEIGHT), pygame.FULLSCREEN)
         else:
             self.WIDTH, self.HEIGHT = width, height
             self.screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
-        
+
     def set_scene(self, scene):
         try:
             self.current_scene = self.scenes[scene]
         except KeyError:
-            print("Invalid state. State remains the same. Available scenes are:", list(self.scenes.keys()))
-            
+            print("Invalid state. State remains the same. Available scenes are:", list(
+                self.scenes.keys()))
+
     def handle_events(self):
         events = pygame.event.get()
         for event in events:
@@ -58,7 +62,6 @@ class Topdown:
                     else:
                         self.current_scene = self.scenes['level']
         return events
-
 
     def exit(self):
         pygame.quit()
