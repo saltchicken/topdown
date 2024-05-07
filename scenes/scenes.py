@@ -30,7 +30,7 @@ class Level(Scene):
         
         self.player_collision = False
         
-        self.camera = Camera()
+        self.camera = Camera((21, 9))
         
         self.load_config(config_file)
         
@@ -193,13 +193,13 @@ class Dropdown(Field):
     
             
 class Camera():
-    def __init__(self):
-        self.map_center = (11, 9)
+    def __init__(self, init_pos):
+        self.init_pos = init_pos
+        self.map_center = [self.init_pos[0], self.init_pos[1]]
         self.row_length = 22
         self.col_length = 18
         self._x = 0.0
         self._y = 0.0
-        self.center_offset = [0.0, 0.0]
 
         
     @property
@@ -214,19 +214,15 @@ class Camera():
     def x(self, value):
         # TODO: Find better way to deal with precision issue
         self._x = round(value, 5)
-        self.center_offset[0] = self._x // 64
-        self.x_slice = slice(int(self.map_center[0] - self.center_offset[0] - self.row_length // 2), 
-                             int(self.map_center[0] - self.center_offset[0] + self.row_length // 2)
-                             )
+        self.map_center[0] = int(self.init_pos[0] - self._x // 64)
+        self.x_slice = slice(int(self.map_center[0] - self.row_length // 2), int(self.map_center[0] + self.row_length // 2))
 
     @y.setter
     def y(self, value):
         # TODO: Find better way to deal with precision issue
         self._y = round(value, 5)
-        self.center_offset[1] = self._y // 64
-        self.y_slice = slice(int(self.map_center[1] - self.center_offset[1] - self.col_length // 2), 
-                             int(self.map_center[1] - self.center_offset[1] + self.col_length // 2)
-                             )
+        self.map_center[1] = int(self.init_pos[1] - self._y // 64)
+        self.y_slice = slice(int(self.map_center[1] - self.col_length // 2), int(self.map_center[1] + self.col_length // 2))
         
     
 class Input():

@@ -46,8 +46,8 @@ class TextureMaster():
             # TODO: Probably shouldn't return None. Find better way to handle error like create a default texture
             return None
         if camera:
-            x -= camera.center_offset[0]
-            y -= camera.center_offset[1]
+            x -= camera.x // 64
+            y -= camera.y // 64
             
             texture.draw(screen, (x * GRID, y * GRID), camera)
         else:
