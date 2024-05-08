@@ -58,8 +58,7 @@ class Body(pygame.sprite.Sprite):
     def animate(self):
         pass
 
-    def update(self, input):
-        self.input = input
+    def update(self):
         self.physics()
         self.animate()
         self.hitbox = self.get_hitbox()
@@ -101,6 +100,7 @@ class Player(Body):
     def __init__(self, camera, all_sprites, *args, **kwargs):
         self.state = State('player2')
         self.camera = camera
+        self.input = Input()
         self.all_sprites = all_sprites
         super().__init__(**kwargs)
 
@@ -145,12 +145,13 @@ class Player(Body):
         elif self.input.y_axis > 0 and self.state.current_action != self.state.actions['FSS'] and abs(self.input.y_axis) > abs(self.input.x_axis):
             self.state.set_action('FSS')
 
-    def update(self, input):
-        super().update(input)
-        player_collision = self.collision_look_ahead(input)
+    def update(self):
+        self.input.update()
+        super().update()
+        player_collision = self.collision_look_ahead()
         if not player_collision:
-            x = input.x_axis * self.move_speed
-            y = input.y_axis * self.move_speed
+            x = self.input.x_axis * self.move_speed
+            y = self.input.y_axis * self.move_speed
             for body in self.all_sprites:
                 if not isinstance(body, Player):
                     if not player_collision:
@@ -159,8 +160,8 @@ class Player(Body):
                         self.camera.y -= y
         
         
-    def collision_look_ahead(self, input):
-        hitbox = self.get_lookahead_hitbox(input)
+    def collision_look_ahead(self):
+        hitbox = self.get_lookahead_hitbox(self.input)
         for body in self.all_sprites:
             if not isinstance(body, Player):
                 if body.hitbox:
@@ -242,6 +243,30 @@ class Action():
     def load_animation(self):
         # return SpriteStripAnim(self.sprite_sheet_filepath, (0,0,128,128), self.count, (0, 0, 0), self.loop, 8)
         return SpriteStripAnim(self.sprite_sheet_filepath, rect=(0, 0, self.width, self.height), count=self.count, loop=self.loop, frames=self.frames)
+    
+class Input():
+    def __init__(self):
+        self.joystick = pygame.joystick.Joystick(0)
+        self.joystick.init()
+        self.x_axis = 0.0
+        self.y_axis = 0.0
+
+    def update(self):
+        self.x_axis = self.process_axis(self.joystick.get_axis(0))
+        self.y_axis = self.process_axis(self.joystick.get_axis(1))
+        self.a_button = self.joystick.get_button(0)
+        # print(self.a_button)
+
+    def process_axis(self, value: float):
+        value = round(value, 1)
+        threshold = 0.55
+        if value <= threshold and value >= 0.0:
+            value = 0.0
+        elif value >= -threshold and value < 0.0:
+            value = 0.0
+        else:
+            value = value
+        return value
 
 
 class spritesheet(object):

@@ -22,7 +22,6 @@ class Level(Scene):
     def __init__(self, screen, config_file):
         super().__init__(screen)
         self.background = (40, 40, 40)
-        self.input = Input()
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.player = None
         self.enemies = pygame.sprite.Group()
@@ -50,8 +49,7 @@ class Level(Scene):
 
     def update(self, events):
         self.screen.fill(self.background)
-        self.input.update()
-        self.all_sprites.update(self.input)
+        self.all_sprites.update()
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
@@ -220,28 +218,3 @@ class Camera():
         self.map_center[1] = int(self.init_pos[1] - self._y // 64)
         self.y_slice = slice(int(
             self.map_center[1] - self.col_length // 2), int(self.map_center[1] + self.col_length // 2))
-
-
-class Input():
-    def __init__(self):
-        self.joystick = pygame.joystick.Joystick(0)
-        self.joystick.init()
-        self.x_axis = 0.0
-        self.y_axis = 0.0
-
-    def update(self):
-        self.x_axis = self.process_axis(self.joystick.get_axis(0))
-        self.y_axis = self.process_axis(self.joystick.get_axis(1))
-        self.a_button = self.joystick.get_button(0)
-        # print(self.a_button)
-
-    def process_axis(self, value: float):
-        value = round(value, 1)
-        threshold = 0.55
-        if value <= threshold and value >= 0.0:
-            value = 0.0
-        elif value >= -threshold and value < 0.0:
-            value = 0.0
-        else:
-            value = value
-        return value
