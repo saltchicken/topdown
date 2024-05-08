@@ -32,9 +32,6 @@ class Level(Scene):
 
         self.load_config(config_file)
 
-        # TODO: This is needed to initialize sprites or else it throws attribute errors. Figure out a way so this is unneeded as it may cause unwanted stuff to happen.
-        # self.all_sprites.update(self.input)
-
     def load_config(self, config_file):
         with open(config_file, 'r') as file:
             config = json.load(file)
