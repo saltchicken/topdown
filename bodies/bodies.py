@@ -7,6 +7,8 @@ import os
 from dataclasses import dataclass
 import pygame
 
+from loguru import logger
+
 
 GRID = 64
 
@@ -56,9 +58,9 @@ class Body(pygame.sprite.Sprite):
     def animate(self):
         pass
 
-    def update(self, input, player_speed, player_collision):
+    def update(self, input):
         self.input = input
-        self.physics(player_speed, player_collision)
+        self.physics()
         self.animate()
         self.hitbox = self.get_hitbox()
         self.visual_hitbox = self.get_visual_hitbox()
@@ -96,9 +98,10 @@ class Body(pygame.sprite.Sprite):
 
 
 class Player(Body):
-    def __init__(self, camera, *args, **kwargs):
+    def __init__(self, camera, all_sprites, *args, **kwargs):
         self.state = State('player2')
         self.camera = camera
+        self.all_sprites = all_sprites
         super().__init__(**kwargs)
 
         self.move_speed = 3
@@ -109,10 +112,8 @@ class Player(Body):
 
         self.layer = 0
 
-    def physics(self, player_speed, player_collision):
-        if not player_collision:
-            self.camera.x -= self.input.x_axis * self.move_speed
-            self.camera.y -= self.input.y_axis * self.move_speed
+    def physics(self):
+        pass
         # if abs(self.input.x_axis) > 0:
         #     self.x += self.input.x_axis * self.move_speed
         # if abs(self.input.y_axis) > 0:
@@ -144,10 +145,30 @@ class Player(Body):
         elif self.input.y_axis > 0 and self.state.current_action != self.state.actions['FSS'] and abs(self.input.y_axis) > abs(self.input.x_axis):
             self.state.set_action('FSS')
 
-    def update(self, input, player_speed, player_collision):
-        # TODO: Shouldn't need to set self.input to input but its needed for animate to work for player. Should be a better way.
-        # self.input = input
-        super().update(input, player_speed, player_collision)
+    def update(self, input):
+        super().update(input)
+        player_collision = self.collision_look_ahead(input)
+        if not player_collision:
+            for body in self.all_sprites:
+                if not isinstance(body, Player):
+                    if not player_collision:
+                        x = input.x_axis * self.move_speed
+                        y = input.y_axis * self.move_speed
+                        body.camera_move(x, y)
+        if not player_collision:
+            self.camera.x -= input.x_axis * self.move_speed
+            self.camera.y -= input.y_axis * self.move_speed
+        
+        
+    def collision_look_ahead(self, input):
+        hitbox = self.get_lookahead_hitbox(input)
+        for body in self.all_sprites:
+            if not isinstance(body, Player):
+                if body.hitbox:
+                    if hitbox.colliderect(body.hitbox):
+                        logger.debug(f"Player collision")
+                        return True
+        return False
 
 
 class Enemy(Body):
@@ -159,11 +180,13 @@ class Enemy(Body):
         self.move_speed = 2
 
         self.layer = 1
+        
+    def camera_move(self, x, y):
+        self.x -= x
+        self.y -= y
 
-    def physics(self, player_speed, player_collision):
-        if not player_collision:
-            self.x -= self.input.x_axis * player_speed
-            self.y -= self.input.y_axis * player_speed
+    def physics(self):
+        pass
             # self.x += 0.1 * self.move_speed
             # self.y += 0.1 * self.move_speed
 

@@ -34,8 +34,7 @@ class Level(Scene):
         self.load_config(config_file)
 
         # TODO: This is needed to initialize sprites or else it throws attribute errors. Figure out a way so this is unneeded as it may cause unwanted stuff to happen.
-        self.all_sprites.update(
-            self.input, self.player.move_speed, False)
+        # self.all_sprites.update(self.input)
 
     def load_config(self, config_file):
         with open(config_file, 'r') as file:
@@ -44,7 +43,7 @@ class Level(Scene):
                 enemy = Enemy(position=enemy_config['position'])
                 self.all_sprites.add(enemy)
                 self.enemies.add(enemy)
-            player = Player(self.camera, position=config['player']['position'])
+            player = Player(self.camera, self.all_sprites, position=config['player']['position'])
             self.all_sprites.add(player)
             self.player = player
             self.map = config['map']
@@ -52,8 +51,7 @@ class Level(Scene):
     def update(self, events):
         self.screen.fill(self.background)
         self.input.update()
-        self.all_sprites.update(
-            self.input, self.player.move_speed, self.collision_look_ahead())
+        self.all_sprites.update(self.input)
 
         self.draw_map()
         self.all_sprites.draw(self.screen)
@@ -73,14 +71,6 @@ class Level(Scene):
             for col_i, col in enumerate(row[self.camera.x_slice]):
                 self.texture.draw_grid(col, col_i - 1, row_i - 1, self.camera)
 
-    def collision_look_ahead(self):
-        hitbox = self.player.get_lookahead_hitbox(self.input)
-        for enemy in self.enemies:
-            if enemy.hitbox:
-                if hitbox.colliderect(enemy.hitbox):
-                    logger.debug(f"Player collision")
-                    return True
-        return False
 
     def visual_collisions(self):
         if self.player:
@@ -202,6 +192,10 @@ class Camera():
         self.col_length = 18
         self._x = 0.0
         self._y = 0.0
+        self.x_slice = slice(int(
+            self.map_center[0] - self.row_length // 2), int(self.map_center[0] + self.row_length // 2))
+        self.y_slice = slice(int(
+            self.map_center[1] - self.col_length // 2), int(self.map_center[1] + self.col_length // 2))
 
     @property
     def x(self):
