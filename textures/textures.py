@@ -29,8 +29,8 @@ class TextureMaster():
     def draw_grid(self, texture_map, x, y, camera=None):
         texture = self.textures[self.texture_mapping[texture_map]]
         if camera:
-            x -= camera.x // 64
-            y -= camera.y // 64
+            x -= camera.x // GRID
+            y -= camera.y // GRID
             self.screen.blit(texture.image, (x * GRID + camera.x, y * GRID + camera.y))
         else:
             self.screen.blit(texture.image, (x * GRID, y * GRID))

@@ -5,8 +5,6 @@ import pygame
 from bodies.bodies import Enemy, Player
 from textures.textures import TextureMaster
 
-GRID = 64
-
 
 class Scene():
     def __init__(self, screen):
