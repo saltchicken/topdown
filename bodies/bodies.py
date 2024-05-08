@@ -149,15 +149,14 @@ class Player(Body):
         super().update(input)
         player_collision = self.collision_look_ahead(input)
         if not player_collision:
+            x = input.x_axis * self.move_speed
+            y = input.y_axis * self.move_speed
             for body in self.all_sprites:
                 if not isinstance(body, Player):
                     if not player_collision:
-                        x = input.x_axis * self.move_speed
-                        y = input.y_axis * self.move_speed
                         body.camera_move(x, y)
-        if not player_collision:
-            self.camera.x -= input.x_axis * self.move_speed
-            self.camera.y -= input.y_axis * self.move_speed
+                        self.camera.x -= x
+                        self.camera.y -= y
         
         
     def collision_look_ahead(self, input):
