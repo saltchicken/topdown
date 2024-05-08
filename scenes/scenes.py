@@ -28,7 +28,7 @@ class Level(Scene):
         self.texture = TextureMaster(screen)
         self.map = None
 
-        self.camera = Camera((21, 9))
+        self.camera = Camera((20, 30))
 
         self.load_config(config_file)
 
@@ -36,10 +36,15 @@ class Level(Scene):
         with open(config_file, 'r') as file:
             config = json.load(file)
             for enemy_config in config['enemies']:
-                enemy = Enemy(position=enemy_config['position'])
+                # TODO: Find cleaner way to put in enemy position. Why is 10 and 8 needed.
+                position = enemy_config['position']
+                enemy_position_x = position[0] - self.camera.init_pos[0] + 10
+                enemy_position_y = position[1] - self.camera.init_pos[1] + 8
+                enemy = Enemy(position=(enemy_position_x, enemy_position_y))
                 self.all_sprites.add(enemy)
                 self.enemies.add(enemy)
-            player = Player(self.camera, self.all_sprites, position=config['player']['position'])
+            # TODO: Player class is just for show. Remove.
+            player = Player(self.camera, self.all_sprites, player_class=config['player']['class'])
             self.all_sprites.add(player)
             self.player = player
             self.map = config['map']

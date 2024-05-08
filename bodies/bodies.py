@@ -14,17 +14,20 @@ GRID = 64
 
 
 class Body(pygame.sprite.Sprite):
-    def __init__(self, position):
+    def __init__(self,position):
         super().__init__()
         self.WIDTH, self.HEIGHT = 128, 128
         self.image = pygame.Surface((self.WIDTH, self.HEIGHT))
         self.rect = self.image.get_rect()
-        self._x = float(self.WIDTH / 2) + float(position[0])
-        self._y = float(self.HEIGHT / 2) + float(position[1])
+        # self.grid_x = int(self._x // GRID)
+        # self.grid_y = int((self._y + self.grid_y_offset) // GRID)
+        self._x = position[0] * 64
+        self._y = position[1] * 64
+        # self._x = float(self.WIDTH / 2) + float(position[0])
+        # self._y = float(self.HEIGHT / 2) + float(position[1])
         # self.grid_x_offset = 0
-        self.grid_y_offset = 0
-        self.grid_x = int(self._x // GRID)
-        self.grid_y = int((self._y + self.grid_y_offset) // GRID)
+        # self.grid_y_offset = 0
+        
         self.hitbox = self.get_hitbox()
         self.visual_hitbox = None
 
@@ -41,7 +44,7 @@ class Body(pygame.sprite.Sprite):
         # TODO: Find better way to deal with precision issue
         self._x = round(value, 5)
         self.rect.x = int(self._x - self.WIDTH / 2)
-        self.grid_x = int(self._x // GRID)
+        # self.grid_x = int(self._x // GRID)
         # max(0, min(player_rect.x, SCREEN_WIDTH - player_rect.width))
 
     @y.setter
@@ -49,7 +52,7 @@ class Body(pygame.sprite.Sprite):
         # TODO: Find better way to deal with precision issue
         self._y = round(value, 5)
         self.rect.y = int(self._y - self.HEIGHT / 2)
-        self.grid_y = int((self._y + self.grid_y_offset) // GRID)
+        # self.grid_y = int((self._y + self.grid_y_offset) // GRID)
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
 
     def physics(self):
@@ -66,8 +69,9 @@ class Body(pygame.sprite.Sprite):
 
     def get_hitbox(self):
         action_frame = self.state.current_action.animation.frame_i
-        # if action_frame >= self.state.current_action.animation.count:
-        #     logger.warning('animation.i is greater than count, why is this happening')
+        # TODO: Remove this check after confirmed that animation doesn't cause this to happen.
+        if action_frame >= self.state.current_action.animation.count:
+            logger.warning('animation.i is greater than count, why is this happening')
         #     return pygame.Rect( self.rect.x + self.state.current_action.hitbox[-1][0],
         #                     self.rect.y + self.state.current_action.hitbox[-1][1],
         #                     self.state.current_action.hitbox[-1][2],
@@ -100,9 +104,15 @@ class Player(Body):
     def __init__(self, camera, all_sprites, *args, **kwargs):
         self.state = State('player2')
         self.camera = camera
+        self.player_class = kwargs['player_class']
         self.input = Input()
         self.all_sprites = all_sprites
-        super().__init__(**kwargs)
+        
+        # TODO: Find better way to determine (10, 8) placing player in center.
+        # info = pygame.display.Info()
+        # width, height = info.current_w, info.current_h
+        # super().__init__(self.camera, (width // 2 - 64, height // 2 - 64))
+        super().__init__((10, 8))
 
         self.move_speed = 3
         self.grid_y_offset = 54
