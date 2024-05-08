@@ -52,7 +52,7 @@ class Body(pygame.sprite.Sprite):
         self.grid_y = int((self._y + self.grid_y_offset) // GRID)
         # max(0, min(player_rect.y, SCREEN_HEIGHT - player_rect.height))
 
-    def physics(self, player_speed, player_collision):
+    def physics(self):
         pass
 
     def animate(self):
