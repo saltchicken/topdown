@@ -163,6 +163,7 @@ class Player(Body):
     def collision_look_ahead(self):
         hitbox = self.get_lookahead_hitbox(self.input)
         for body in self.all_sprites:
+            # TODO: This would be better to use a group that doesn't have player in it
             if not isinstance(body, Player):
                 if body.hitbox:
                     if hitbox.colliderect(body.hitbox):
