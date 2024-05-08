@@ -91,6 +91,7 @@ class Body(pygame.sprite.Sprite):
                            self.state.current_action.visual_hitbox[action_frame][3])
 
     def get_lookahead_hitbox(self, input):
+        # TODO: Determine why 5 and see if there is a better value.
         return pygame.Rect(self.hitbox[0] + input.x_axis * 5,
                            self.hitbox[1] + input.y_axis * 5,
                            self.hitbox[2],

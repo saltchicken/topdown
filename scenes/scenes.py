@@ -3,7 +3,7 @@ from loguru import logger
 import pygame
 
 from bodies.bodies import Enemy, Player
-from textures.textures import TextureMaster
+from textures.textures import TextureMaster, TextureMaster2
 from .menu import Dropdown
 from .camera import Camera
 
@@ -26,11 +26,14 @@ class Level(Scene):
         self.player = None
         self.enemies = pygame.sprite.Group()
         self.texture = TextureMaster(screen)
+        self.texture2 = TextureMaster2(screen)
         self.map = None
 
         self.camera = Camera((12, 10))
 
         self.load_config(config_file)
+        
+        self.active_sprite_map = self.create_map_sprites()
 
     def load_config(self, config_file):
         with open(config_file, 'r') as file:
@@ -53,7 +56,11 @@ class Level(Scene):
         self.screen.fill(self.background)
         self.all_sprites.update()
 
-        self.draw_map()
+        # Comment this out when testing TextreMaster2
+        # self.draw_map()
+        # active_sprite_map = self.create_map_sprites()
+        self.active_sprite_map.draw(self.screen)
+        
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
         self.visual_collisions()
@@ -70,6 +77,10 @@ class Level(Scene):
         for row_i, row in enumerate(self.map[self.camera.y_slice]):
             for col_i, col in enumerate(row[self.camera.x_slice]):
                 self.texture.draw_grid(col, col_i - 1, row_i - 1, self.camera)
+                
+    def create_map_sprites(self):
+        self.texture2.create_map_sprite_group(self.map, self.camera)
+        return self.texture2.active_sprite_map
 
 
     def visual_collisions(self):
