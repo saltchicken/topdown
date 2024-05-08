@@ -28,7 +28,7 @@ class Level(Scene):
         self.texture = TextureMaster(screen)
         self.map = None
 
-        self.camera = Camera((20, 30))
+        self.camera = Camera((12, 10))
 
         self.load_config(config_file)
 
