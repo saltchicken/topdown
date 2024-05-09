@@ -34,7 +34,7 @@ class Level(Scene):
 
         self.load_config(config_file)
         
-        self.active_sprite_map = self.create_map_sprites()
+        self.texture2.add_grid(self.map, self.camera, (10, 8))
         
         # Needed for update debug. Can be deleted when no longer needed.
         self.count = 0
@@ -63,7 +63,8 @@ class Level(Scene):
         # Comment this out when testing TextreMaster2
         # self.draw_map()
         # active_sprite_map = self.create_map_sprites()
-        self.active_sprite_map.draw(self.screen)
+        # self.active_sprite_map.draw(self.screen)
+        self.texture2.grids[str((10,8))].draw(self.screen)
         
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
@@ -92,9 +93,7 @@ class Level(Scene):
     #         for col_i, col in enumerate(row[self.camera.x_slice]):
     #             self.texture.draw_grid(col, col_i - 1, row_i - 1, self.camera)
                 
-    def create_map_sprites(self):
-        self.texture2.create_map_sprite_group(self.map, self.camera, (10, 8))
-        return self.texture2.active_sprite_map
+    
 
 
     def visual_collisions(self):
