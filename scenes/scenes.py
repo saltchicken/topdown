@@ -29,7 +29,7 @@ class Level(Scene):
         
         self.map = None
 
-        self.camera = Camera((12, 10))
+        self.camera = Camera((10, 8))
         self.texture2 = TextureMaster2(screen, self.camera)
 
         self.load_config(config_file)
@@ -85,7 +85,7 @@ class Level(Scene):
     #             self.texture.draw_grid(col, col_i - 1, row_i - 1, self.camera)
                 
     def create_map_sprites(self):
-        self.texture2.create_map_sprite_group(self.map, self.camera, (12, 10))
+        self.texture2.create_map_sprite_group(self.map, self.camera, (10, 8))
         return self.texture2.active_sprite_map
 
 
