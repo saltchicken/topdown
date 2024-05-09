@@ -111,7 +111,7 @@ class Level(Scene):
         self.count += 1
         if self.count >= 50:
             # Print stuff
-            logger.debug(f'{self.player.rect}')
+            # logger.debug(f'{self.player.rect}')
             logger.debug(f'{self.camera.map_center}')
             self.count = 0
 

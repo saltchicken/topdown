@@ -21,6 +21,14 @@ class Body(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         # self.grid_x = int(self._x // GRID)
         # self.grid_y = int((self._y + self.grid_y_offset) // GRID)
+        
+        # These offset are specific to the 128 x 128 sprites.
+        # self.x_grid_offset = 32
+        # self.y_grid_offset = 10
+        
+        # self._x = position[0] * 64 - self.x_grid_offset
+        # self._y = position[1] * 64 - self.y_grid_offset
+        
         self._x = position[0] * 64
         self._y = position[1] * 64
         # self._x = float(self.WIDTH / 2) + float(position[0])

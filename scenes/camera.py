@@ -4,8 +4,9 @@ class Camera():
         self.map_center = [self.init_pos[0], self.init_pos[1]]
         self.row_length = 22
         self.col_length = 18
-        self._x = 0.0
-        self._y = 0.0
+        # TODO: Should this be initialized with offset? Or set to 0.0
+        self._x = 32.0
+        self._y = 10.0
         self.x_slice = slice(int(
             self.map_center[0] - self.row_length // 2), int(self.map_center[0] + self.row_length // 2))
         self.y_slice = slice(int(

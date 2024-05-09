@@ -42,6 +42,11 @@ class Texture2(pygame.sprite.Sprite):
         self.image = image
         self.info = info
         self.rect = self.image.get_rect()
+        # These offset are specific to the 128 x 128 sprites.
+        self.x_grid_offset = 32
+        self.y_grid_offset = 10
+        # self.rect.x += position[0] * 64 + self.x_grid_offset
+        # self.rect.y += position[1] * 64 + self.y_grid_offset
         self.rect.x += position[0] * 64
         self.rect.y += position[1] * 64
 
