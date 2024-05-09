@@ -70,8 +70,16 @@ class Level(Scene):
         self.visual_collisions()
         
         self.update_debug()
+        self.highlight_grid(10, 8)
 
         pygame.display.flip()
+        
+    def highlight_grid(self, grid_x, grid_y):
+        overlay_color = (255, 0, 0)
+        alpha = 128
+        overlay = pygame.Surface((64, 64), pygame.locals.SRCALPHA)
+        overlay.fill((*overlay_color, alpha))
+        self.screen.blit(overlay, (grid_x * 64 + self.camera.x, grid_y * 64 + self.camera.y))
 
     def draw_hitboxes(self):
         if self.player:
