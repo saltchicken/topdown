@@ -34,7 +34,14 @@ class Level(Scene):
 
         self.load_config(config_file)
         
-        self.texture2.add_grid(self.map, self.camera, (10, 8))
+        # self.texture2.add_grid(self.map, self.camera, (10, 8))
+        # self.texture2.add_grid(self.map, self.camera, (30, 8))
+        
+        # self.texture2.create_map_sprite_group(self.map, self.camera, (10, 8))
+        # self.texture2.create_map_sprite_group(self.map, self.camera, (30, 8))
+        
+        self.sprite_map = self.texture2.create_map_sprite_group(self.map, self.camera, [10, 8])
+        self.sprite_map2 = self.texture2.create_map_sprite_group(self.map, self.camera, [30, 8])
         
         # Needed for update debug. Can be deleted when no longer needed.
         self.count = 0
@@ -64,8 +71,17 @@ class Level(Scene):
         # self.draw_map()
         # active_sprite_map = self.create_map_sprites()
         # self.active_sprite_map.draw(self.screen)
-        self.texture2.grids[str((10,8))].draw(self.screen)
+        # self.texture2.grids[str((10,8))].draw(self.screen)
         
+
+        # for grid in self.texture2.grids.values():
+        #     grid.draw(self.screen)
+        
+        # self.texture2.all_grids.draw(self.screen)
+        
+        self.sprite_map.draw(self.screen)
+        self.sprite_map2.draw(self.screen)
+            
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
         self.visual_collisions()
