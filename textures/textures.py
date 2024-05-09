@@ -42,9 +42,11 @@ class Texture2(pygame.sprite.Sprite):
         self.image = image
         self.info = info
         self.rect = self.image.get_rect()
+        self.rect.x += position[0] * 64
+        self.rect.y += position[1] * 64
 
 class TextureMaster2():
-    def __init__(self, screen, profile=''):
+    def __init__(self, screen, camera, profile=''):
         self.screen = screen
         self.texture_images = {}
         self.texture_infos = {}
@@ -57,7 +59,7 @@ class TextureMaster2():
             with open(f'{directory}{profile}/{texture}/{texture_name}.json') as info_file:
                 self.texture_infos[texture] = json.load(info_file)
             
-        self.active_sprite_map = pygame.sprite.Group()
+        self.active_sprite_map = TextureGroup(camera)
 
     # def draw_grid(self, texture_map, x, y, camera=None):
     #     texture = self.textures[self.texture_mapping[texture_map]]
@@ -67,9 +69,23 @@ class TextureMaster2():
     #         self.screen.blit(texture.image, (x * GRID + camera.x, y * GRID + camera.y))
     #     else:
     #         self.screen.blit(texture.image, (x * GRID, y * GRID))
-    def create_map_sprite_group(self, map, camera):
-        for row_i, row in enumerate(map[camera.y_slice]):
-            for col_i, col in enumerate(row[camera.x_slice]):
-                self.active_sprite_map.add(Texture2(self.texture_images[self.texture_mapping[col]], self.texture_infos[self.texture_mapping[col]], (row_i, col_i)))
+    def create_map_sprite_group(self, map, camera, center):
+        col_length = 16
+        row_length = 20
+        x_slice = slice(int(center[0] - row_length // 2), int(center[0] + row_length // 2))
+        y_slice = slice(int(center[1] - col_length // 2), int(center[1] + col_length // 2))
+        # for col_i, col in enumerate(map[camera.y_slice]):
+        #     for row_i, tile in enumerate(col[camera.x_slice]):
+        for col_i, col in enumerate(map[y_slice]):
+            for row_i, tile in enumerate(col[x_slice]):
+                self.active_sprite_map.add(Texture2(self.texture_images[self.texture_mapping[tile]], self.texture_infos[self.texture_mapping[tile]], (row_i, col_i)))
                 # print(self.texture_images[self.texture_mapping[col]])
                 # self.texture.draw_grid(col, col_i - 1, row_i - 1, camera)
+                
+class TextureGroup(pygame.sprite.Group):
+    def __init__(self, camera):
+        super().__init__()
+        self.camera = camera
+    def draw(self, surface):
+        for sprite in self.sprites():
+            surface.blit(sprite.image, pygame.Rect(sprite.rect.x + self.camera.x, sprite.rect.y + self.camera.y, sprite.rect.width, sprite.rect.height))

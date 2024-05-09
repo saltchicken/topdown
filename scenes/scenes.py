@@ -25,15 +25,19 @@ class Level(Scene):
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.player = None
         self.enemies = pygame.sprite.Group()
-        self.texture = TextureMaster(screen)
-        self.texture2 = TextureMaster2(screen)
+        # self.texture = TextureMaster(screen)
+        
         self.map = None
 
         self.camera = Camera((12, 10))
+        self.texture2 = TextureMaster2(screen, self.camera)
 
         self.load_config(config_file)
         
         self.active_sprite_map = self.create_map_sprites()
+        
+        # Needed for update debug. Can be deleted when no longer needed.
+        self.count = 0
 
     def load_config(self, config_file):
         with open(config_file, 'r') as file:
@@ -64,6 +68,8 @@ class Level(Scene):
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
         self.visual_collisions()
+        
+        self.update_debug()
 
         pygame.display.flip()
 
@@ -73,13 +79,13 @@ class Level(Scene):
         for enemy in self.enemies:
             enemy.draw_hitbox(self.screen, enemy.visual_hitbox)
 
-    def draw_map(self):
-        for row_i, row in enumerate(self.map[self.camera.y_slice]):
-            for col_i, col in enumerate(row[self.camera.x_slice]):
-                self.texture.draw_grid(col, col_i - 1, row_i - 1, self.camera)
+    # def draw_map(self):
+    #     for row_i, row in enumerate(self.map[self.camera.y_slice]):
+    #         for col_i, col in enumerate(row[self.camera.x_slice]):
+    #             self.texture.draw_grid(col, col_i - 1, row_i - 1, self.camera)
                 
     def create_map_sprites(self):
-        self.texture2.create_map_sprite_group(self.map, self.camera)
+        self.texture2.create_map_sprite_group(self.map, self.camera, (12, 10))
         return self.texture2.active_sprite_map
 
 
@@ -100,6 +106,14 @@ class Level(Scene):
             self.all_sprites.change_layer(player, 0)
             self.all_sprites.change_layer(enemy, 1)
         logger.debug(f"Player {player} collided with Enemy {enemy}")
+        
+    def update_debug(self):
+        self.count += 1
+        if self.count >= 50:
+            # Print stuff
+            logger.debug(f'{self.player.rect}')
+            logger.debug(f'{self.camera.map_center}')
+            self.count = 0
 
 
 class Menu(Scene):
