@@ -3,7 +3,7 @@ from loguru import logger
 import pygame
 
 from bodies.bodies import Enemy, Player
-from textures.textures import TextureMaster, TextureMaster2
+from textures.textures import TextureMaster2 #, TextureMaster
 from .menu import Dropdown
 from .camera import Camera
 
@@ -96,11 +96,16 @@ class Level(Scene):
         self.visual_collisions()
         
         self.update_debug()
-        self.highlight_grid(10, 8)
+        self.highlight_grid(30, 24)
 
         pygame.display.flip()
         
     def highlight_grid(self, grid_x, grid_y):
+        grid_x -= INIT_X
+        grid_y -= INIT_Y
+        # TODO: Figure out these magic numbers based on centering
+        grid_x += 10 - 1
+        grid_y += 8
         overlay_color = (255, 0, 0)
         alpha = 128
         overlay = pygame.Surface((64, 64), pygame.locals.SRCALPHA)
