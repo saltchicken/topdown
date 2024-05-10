@@ -1,5 +1,5 @@
-INIT_X = 30
-INIT_Y = 24
+INIT_X = 0
+INIT_Y = 0
 ROW_LENGTH = 20
 COLUMN_LENGTH = 16
 
@@ -35,7 +35,7 @@ class Camera():
         # self.x_slice = slice(int(
         #     self.map_center[0] - self.row_length // 2), int(self.map_center[0] + self.row_length // 2))
         previous_grid = self.current_grid[0]
-        self.current_grid[0] = (self.map_center[0]) // 20 - INIT_X // ROW_LENGTH
+        self.current_grid[0] = (self.map_center[0] + 10) // 20
         if previous_grid != self.current_grid[0]:
             print('Grid changed')
 
@@ -43,10 +43,11 @@ class Camera():
     def y(self, value):
         # TODO: Find better way to deal with precision issue
         self._y = round(value, 5)
-        self.map_center[1] = int(self.init_pos[1] - self._y // 64)
+        # TODO: +16 is added so that the grid is properly calculated. Why?
+        self.map_center[1] = int(self.init_pos[1] - (self._y + 16) // 64)
         # self.y_slice = slice(int(
         #     self.map_center[1] - self.col_length // 2), int(self.map_center[1] + self.col_length // 2))
         previous_grid = self.current_grid[1]
-        self.current_grid[1] = self.map_center[1] // 16 - INIT_Y // COLUMN_LENGTH
+        self.current_grid[1] = (self.map_center[1] + 8) // 16
         if previous_grid != self.current_grid[1]:
             print('Grid changed')

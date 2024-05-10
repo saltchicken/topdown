@@ -73,6 +73,7 @@ class Body(pygame.sprite.Sprite):
         self.physics()
         self.animate()
         self.hitbox = self.get_hitbox()
+        
         self.visual_hitbox = self.get_visual_hitbox()
 
     def get_hitbox(self):
@@ -88,7 +89,7 @@ class Body(pygame.sprite.Sprite):
                            self.rect.y +
                            self.state.current_action.hitbox[action_frame][1],
                            self.state.current_action.hitbox[action_frame][2],
-                           self.state.current_action.hitbox[action_frame][3])
+                           self.state.current_action.hitbox[action_frame][3])       
 
     def get_visual_hitbox(self):
         action_frame = self.state.current_action.animation.frame_i
@@ -177,6 +178,7 @@ class Player(Body):
                         body.camera_move(x, y)
                         self.camera.x -= x
                         self.camera.y -= y
+        self.standing_point = self.get_standing_point()
         
         
     def collision_look_ahead(self):
@@ -189,6 +191,9 @@ class Player(Body):
                         logger.debug(f"Player collision")
                         return True
         return False
+    
+    def get_standing_point(self):
+        return (self.hitbox.x + self.hitbox.width // 2 - self.camera.x, self.hitbox.y + self.hitbox.height // 2 - self.camera.y)
 
 
 class Enemy(Body):

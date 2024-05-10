@@ -7,10 +7,12 @@ from textures.textures import TextureMaster2 #, TextureMaster
 from .menu import Dropdown
 from .camera import Camera
 
-INIT_X = 30
-INIT_Y = 24
+INIT_X = 0
+INIT_Y = 0
 ROW_LENGTH = 20
 COLUMN_LENGTH = 16
+
+TEMP_LIST_MAP_CENTER = (200, 200)
 
 
 class Scene():
@@ -38,6 +40,9 @@ class Level(Scene):
         self.texture2 = TextureMaster2(screen, self.camera)
 
         self.load_config(config_file)
+        
+        # self.list_map_center = (len(self.map) // 2, len(self.map[0]) // 2)
+        # print(self.list_map_center)
         
         # self.texture2.add_grid(self.map, self.camera, (10, 8))
         # self.texture2.add_grid(self.map, self.camera, (30, 8))
@@ -93,15 +98,12 @@ class Level(Scene):
         
         # self.sprite_map_center.sprites()[0].highlight(self.camera)
         
-        point = (self.player.hitbox.x + self.player.hitbox.width // 2 - self.camera.x, self.player.hitbox.y + self.player.hitbox.height // 2 - self.camera.y)
-        for texture in self.sprite_map_center:
-            if texture.rect.collidepoint(point):
-                texture.highlight(self.camera)
             
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
         self.draw_player_center_point()
         self.visual_collisions()
+        self.map_grid_collisions()
         
         self.update_debug()
         self.highlight_grid(30, 24)
@@ -136,7 +138,10 @@ class Level(Scene):
     #             self.texture.draw_grid(col, col_i - 1, row_i - 1, self.camera)
                 
     
-
+    def map_grid_collisions(self):
+        for texture in self.sprite_map_center:
+            if texture.rect.collidepoint(self.player.standing_point):
+                texture.highlight(self.camera)
 
     def visual_collisions(self):
         if self.player:
@@ -161,8 +166,8 @@ class Level(Scene):
         if self.count >= 50:
             # Print stuff
             # logger.debug(f'{self.player.rect}')
-            logger.debug(f'{self.camera.map_center}')
-            logger.debug(f'{self.camera.current_grid}')
+            # logger.debug(f'{self.camera.map_center}')
+            logger.debug(f'Map center: {self.camera.map_center}, Current grid: {self.camera.current_grid}')
             # logger.debug(f'{self.player.rect}')
             self.count = 0
 

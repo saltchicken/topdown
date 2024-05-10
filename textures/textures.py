@@ -4,8 +4,10 @@ import json
 
 GRID = 64
 
-INIT_X = 30
-INIT_Y = 24
+INIT_X = 0
+INIT_Y = 0
+
+TEMP_LIST_MAP_CENTER = (200, 200)
 
 # class Texture():
 #     def __init__(self, texture_file_path):
@@ -102,9 +104,9 @@ class TextureMaster2():
     def create_map_sprite_group(self, map, camera, center):
         col_length = 16
         row_length = 20
-        x_slice = slice(int(center[0] - row_length // 2), int(center[0] + row_length // 2))
+        x_slice = slice(int(center[0] - row_length // 2) + TEMP_LIST_MAP_CENTER[0], int(center[0] + row_length // 2) + TEMP_LIST_MAP_CENTER[0])
         
-        y_slice = slice(int(center[1] - col_length // 2), int(center[1] + col_length // 2))
+        y_slice = slice(int(center[1] - col_length // 2) + TEMP_LIST_MAP_CENTER[1], int(center[1] + col_length // 2) + TEMP_LIST_MAP_CENTER[1])
         print(y_slice)
         # for col_i, col in enumerate(map[camera.y_slice]):
         #     for row_i, tile in enumerate(col[camera.x_slice]):
