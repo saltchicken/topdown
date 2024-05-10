@@ -43,6 +43,8 @@ class Level(Scene):
         
         self.texture.create_active_map(self.map, self.camera, [INIT_X, INIT_Y])
         
+        self.current_grid = self.texture.active_map[str(self.camera.current_grid)]
+        
         # self.sprite_map_center = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y])
         # self.sprite_map_east = self.texture2.create_texture_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
         # self.sprite_map_west = self.texture2.create_texture_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
@@ -71,6 +73,7 @@ class Level(Scene):
     def update(self, events):
         self.screen.fill(self.background)
         self.all_sprites.update()
+        self.current_grid = self.texture.active_map[str(self.camera.current_grid)]
         
         for map in self.texture.active_map.values():
             map.draw(self.screen)
@@ -115,10 +118,10 @@ class Level(Scene):
                 
     
     def map_grid_collisions(self):
-        for texture_group in self.texture.active_map.values():
-            for texture in texture_group:
-                if texture.rect.collidepoint(self.player.standing_point):
-                    texture.highlight(self.camera)
+        # for texture_group in self.texture.active_map.values():
+        for texture in self.current_grid:
+            if texture.rect.collidepoint(self.player.standing_point):
+                texture.highlight(self.camera)
 
     def visual_collisions(self):
         if self.player:
