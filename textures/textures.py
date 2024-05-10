@@ -42,16 +42,16 @@ class TextureMaster():
             with open(f'{directory}{profile}/{texture}/{texture_name}.json') as info_file:
                 self.texture_infos[texture] = json.load(info_file)
         
-    def create_map_sprite_group(self, map, camera, center):
+    def create_texture_group(self, map, camera, center):
         col_length = 16
         row_length = 20
         x_slice = slice(int(center[0] - row_length // 2) + TEMP_LIST_MAP_CENTER[0], int(center[0] + row_length // 2) + TEMP_LIST_MAP_CENTER[0])
         y_slice = slice(int(center[1] - col_length // 2) + TEMP_LIST_MAP_CENTER[1], int(center[1] + col_length // 2) + TEMP_LIST_MAP_CENTER[1])
-        sprite_map = TextureGroup(camera)
+        texture_group = TextureGroup(camera)
         for col_i, col in enumerate(map[y_slice]):
             for row_i, tile in enumerate(col[x_slice]):
-                sprite_map.add(Texture(self.screen, self.texture_images[self.texture_mapping[tile]], self.texture_infos[self.texture_mapping[tile]], [row_i + center[0], col_i + center[1]]))
-        return sprite_map
+                texture_group.add(Texture(self.screen, self.texture_images[self.texture_mapping[tile]], self.texture_infos[self.texture_mapping[tile]], [row_i + center[0], col_i + center[1]]))
+        return texture_group
                 
 class TextureGroup(pygame.sprite.Group):
     def __init__(self, camera):

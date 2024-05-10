@@ -41,10 +41,10 @@ class Level(Scene):
 
         self.load_config(config_file)
         
-        self.sprite_map_center = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X, INIT_Y])
-        self.sprite_map_east = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
-        self.sprite_map_west = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
-        self.sprite_map_north = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X, INIT_Y - COLUMN_LENGTH])
+        self.sprite_map_center = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y])
+        self.sprite_map_east = self.texture2.create_texture_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
+        self.sprite_map_west = self.texture2.create_texture_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
+        self.sprite_map_north = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y - COLUMN_LENGTH])
         
         # Needed for update debug. Can be deleted when no longer needed.
         self.count = 0
