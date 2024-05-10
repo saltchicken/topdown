@@ -45,7 +45,8 @@ class Level(Scene):
         
         self.current_grid = self.texture.active_map[str(self.camera.current_grid)]
         
-        self.previous_grid = self.camera.current_grid.copy()
+        self.previous_grid_x = self.camera.current_grid[0]
+        self.previous_grid_y = self.camera.current_grid[1]
         
         # self.sprite_map_center = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y])
         # self.sprite_map_east = self.texture2.create_texture_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
@@ -93,9 +94,18 @@ class Level(Scene):
         pygame.display.flip()
         
     def check_grid_change(self):
-        if self.previous_grid != self.camera.current_grid:
-            self.previous_grid = self.camera.current_grid.copy()
-            print('grid change. New grid ' + str(self.camera.current_grid))
+        if self.previous_grid_x != self.camera.current_grid[0]:
+            if self.previous_grid_x > self.camera.current_grid[0]:
+                print('x grid change left. New grid ' + str(self.camera.current_grid))
+            else:
+                print('x grid change right. New grid ' + str(self.camera.current_grid))
+            self.previous_grid_x = self.camera.current_grid[0]
+        if self.previous_grid_y != self.camera.current_grid[1]:
+            if self.previous_grid_y > self.camera.current_grid[1]:
+                print('y grid change up. New grid ' + str(self.camera.current_grid))
+            else:
+                print('y grid change down. New grid ' + str(self.camera.current_grid))
+            self.previous_grid_y = self.camera.current_grid[1]
         
         
     def draw_player_center_point(self):
