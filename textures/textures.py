@@ -6,6 +6,8 @@ GRID = 64
 
 INIT_X = 0
 INIT_Y = 0
+ROW_LENGTH = 20
+COLUMN_LENGTH = 16
 
 TEMP_LIST_MAP_CENTER = (200, 200)
 
@@ -41,17 +43,27 @@ class TextureMaster():
             self.texture_images[texture] = pygame.image.load(f'{directory}{profile}/{texture}/{texture_name}.png')
             with open(f'{directory}{profile}/{texture}/{texture_name}.json') as info_file:
                 self.texture_infos[texture] = json.load(info_file)
+                
+        self.active_map = []
         
     def create_texture_group(self, map, camera, center):
-        col_length = 16
-        row_length = 20
-        x_slice = slice(int(center[0] - row_length // 2) + TEMP_LIST_MAP_CENTER[0], int(center[0] + row_length // 2) + TEMP_LIST_MAP_CENTER[0])
-        y_slice = slice(int(center[1] - col_length // 2) + TEMP_LIST_MAP_CENTER[1], int(center[1] + col_length // 2) + TEMP_LIST_MAP_CENTER[1])
+        x_slice = slice(int(center[0] - ROW_LENGTH // 2) + TEMP_LIST_MAP_CENTER[0], int(center[0] + ROW_LENGTH // 2) + TEMP_LIST_MAP_CENTER[0])
+        y_slice = slice(int(center[1] - COLUMN_LENGTH // 2) + TEMP_LIST_MAP_CENTER[1], int(center[1] + COLUMN_LENGTH // 2) + TEMP_LIST_MAP_CENTER[1])
         texture_group = TextureGroup(camera)
         for col_i, col in enumerate(map[y_slice]):
             for row_i, tile in enumerate(col[x_slice]):
                 texture_group.add(Texture(self.screen, self.texture_images[self.texture_mapping[tile]], self.texture_infos[self.texture_mapping[tile]], [row_i + center[0], col_i + center[1]]))
         return texture_group
+    
+    def create_active_map(self, map, camera, center):
+        self.active_map.append(self.create_texture_group(map, camera, center))
+        self.active_map.append(self.create_texture_group(map, camera, [center[0] + ROW_LENGTH, center[1]]))
+        self.active_map.append(self.create_texture_group(map, camera, [center[0] - ROW_LENGTH, center[1]]))
+        self.active_map.append(self.create_texture_group(map, camera, [center[0], center[1] - COLUMN_LENGTH]))
+        # self.sprite_map_east = self.texture2.create_texture_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
+        # self.sprite_map_west = self.texture2.create_texture_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
+        # self.sprite_map_north = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y - COLUMN_LENGTH])
+        
                 
 class TextureGroup(pygame.sprite.Group):
     def __init__(self, camera):

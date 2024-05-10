@@ -37,14 +37,16 @@ class Level(Scene):
         self.map = None
 
         self.camera = Camera((INIT_X, INIT_Y))
-        self.texture2 = TextureMaster(screen, self.camera)
+        self.texture = TextureMaster(screen, self.camera)
 
         self.load_config(config_file)
         
-        self.sprite_map_center = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y])
-        self.sprite_map_east = self.texture2.create_texture_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
-        self.sprite_map_west = self.texture2.create_texture_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
-        self.sprite_map_north = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y - COLUMN_LENGTH])
+        self.texture.create_active_map(self.map, self.camera, [INIT_X, INIT_Y])
+        
+        # self.sprite_map_center = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y])
+        # self.sprite_map_east = self.texture2.create_texture_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
+        # self.sprite_map_west = self.texture2.create_texture_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
+        # self.sprite_map_north = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y - COLUMN_LENGTH])
         
         # Needed for update debug. Can be deleted when no longer needed.
         self.count = 0
@@ -70,11 +72,8 @@ class Level(Scene):
         self.screen.fill(self.background)
         self.all_sprites.update()
         
-        self.sprite_map_center.draw(self.screen)
-        self.sprite_map_east.draw(self.screen)
-        self.sprite_map_west.draw(self.screen)
-        self.sprite_map_north.draw(self.screen)
-        
+        for map in self.texture.active_map:
+            map.draw(self.screen)
             
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
@@ -83,7 +82,7 @@ class Level(Scene):
         self.map_grid_collisions()
         
         self.update_debug()
-        self.highlight_grid(30, 24)
+        # self.highlight_grid(1, 2)
 
         pygame.display.flip()
         
@@ -116,9 +115,10 @@ class Level(Scene):
                 
     
     def map_grid_collisions(self):
-        for texture in self.sprite_map_center:
-            if texture.rect.collidepoint(self.player.standing_point):
-                texture.highlight(self.camera)
+        for texture_group in self.texture.active_map:
+            for texture in texture_group:
+                if texture.rect.collidepoint(self.player.standing_point):
+                    texture.highlight(self.camera)
 
     def visual_collisions(self):
         if self.player:
