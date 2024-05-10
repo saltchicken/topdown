@@ -4,6 +4,8 @@ import json
 
 GRID = 64
 
+INIT_X = 30
+INIT_Y = 24
 
 class Texture():
     def __init__(self, texture_file_path):
@@ -48,10 +50,9 @@ class Texture2(pygame.sprite.Sprite):
         # self.rect.x += position[0] * 64 + self.x_grid_offset
         # self.rect.y += position[1] * 64 + self.y_grid_offset
         # TODO: Figure out why these magic numbers are needed. 10 and 8
-        position[0] -= 10
-        position[1] -= 8
+        position[0] -= INIT_X
+        position[1] -= INIT_Y
         self.rect.x += position[0] * 64
-        print(position[0])
         self.rect.y += position[1] * 64
 
 class TextureMaster2():
@@ -93,7 +94,9 @@ class TextureMaster2():
         col_length = 16
         row_length = 20
         x_slice = slice(int(center[0] - row_length // 2), int(center[0] + row_length // 2))
+        
         y_slice = slice(int(center[1] - col_length // 2), int(center[1] + col_length // 2))
+        print(y_slice)
         # for col_i, col in enumerate(map[camera.y_slice]):
         #     for row_i, tile in enumerate(col[camera.x_slice]):
         sprite_map = TextureGroup(camera)

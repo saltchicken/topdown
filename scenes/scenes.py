@@ -7,6 +7,11 @@ from textures.textures import TextureMaster, TextureMaster2
 from .menu import Dropdown
 from .camera import Camera
 
+INIT_X = 30
+INIT_Y = 24
+ROW_LENGTH = 20
+COLUMN_LENGTH = 16
+
 
 class Scene():
     def __init__(self, screen):
@@ -29,7 +34,7 @@ class Level(Scene):
         
         self.map = None
 
-        self.camera = Camera((10, 8))
+        self.camera = Camera((INIT_X, INIT_Y))
         self.texture2 = TextureMaster2(screen, self.camera)
 
         self.load_config(config_file)
@@ -40,8 +45,10 @@ class Level(Scene):
         # self.texture2.create_map_sprite_group(self.map, self.camera, (10, 8))
         # self.texture2.create_map_sprite_group(self.map, self.camera, (30, 8))
         
-        self.sprite_map = self.texture2.create_map_sprite_group(self.map, self.camera, [10, 8])
-        self.sprite_map2 = self.texture2.create_map_sprite_group(self.map, self.camera, [30, 8])
+        self.sprite_map_center = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X, INIT_Y])
+        self.sprite_map_east = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
+        self.sprite_map_west = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
+        self.sprite_map_north = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X, INIT_Y - COLUMN_LENGTH])
         
         # Needed for update debug. Can be deleted when no longer needed.
         self.count = 0
@@ -52,8 +59,8 @@ class Level(Scene):
             for enemy_config in config['enemies']:
                 # TODO: Find cleaner way to put in enemy position. Why is 10 and 8 needed.
                 position = enemy_config['position']
-                enemy_position_x = position[0] - self.camera.init_pos[0] + 10
-                enemy_position_y = position[1] - self.camera.init_pos[1] + 8
+                enemy_position_x = position[0] - self.camera.init_pos[0] + INIT_X
+                enemy_position_y = position[1] - self.camera.init_pos[1] + INIT_Y
                 enemy = Enemy(position=(enemy_position_x, enemy_position_y))
                 self.all_sprites.add(enemy)
                 self.enemies.add(enemy)
@@ -79,8 +86,10 @@ class Level(Scene):
         
         # self.texture2.all_grids.draw(self.screen)
         
-        self.sprite_map.draw(self.screen)
-        self.sprite_map2.draw(self.screen)
+        self.sprite_map_center.draw(self.screen)
+        self.sprite_map_east.draw(self.screen)
+        self.sprite_map_west.draw(self.screen)
+        self.sprite_map_north.draw(self.screen)
             
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
@@ -136,6 +145,7 @@ class Level(Scene):
             # Print stuff
             # logger.debug(f'{self.player.rect}')
             logger.debug(f'{self.camera.map_center}')
+            logger.debug(f'{self.camera.current_grid}')
             self.count = 0
 
 
