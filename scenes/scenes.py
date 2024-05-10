@@ -45,6 +45,8 @@ class Level(Scene):
         
         self.current_grid = self.texture.active_map[str(self.camera.current_grid)]
         
+        self.previous_grid = self.camera.current_grid.copy()
+        
         # self.sprite_map_center = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y])
         # self.sprite_map_east = self.texture2.create_texture_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
         # self.sprite_map_west = self.texture2.create_texture_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
@@ -74,6 +76,7 @@ class Level(Scene):
         self.screen.fill(self.background)
         self.all_sprites.update()
         self.current_grid = self.texture.active_map[str(self.camera.current_grid)]
+        self.check_grid_change()
         
         for map in self.texture.active_map.values():
             map.draw(self.screen)
@@ -88,6 +91,12 @@ class Level(Scene):
         # self.highlight_grid(1, 2)
 
         pygame.display.flip()
+        
+    def check_grid_change(self):
+        if self.previous_grid != self.camera.current_grid:
+            self.previous_grid = self.camera.current_grid.copy()
+            print('grid change')
+        
         
     def draw_player_center_point(self):
         point = (self.player.hitbox.x + self.player.hitbox.width // 2, self.player.hitbox.y + self.player.hitbox.height // 2)
@@ -145,7 +154,7 @@ class Level(Scene):
         self.count += 1
         if self.count >= 50:
             # Print stuff
-            logger.debug(f'Map center: {self.camera.map_center}, Current grid: {self.camera.current_grid}')
+            logger.debug(f'Map center: {self.camera.map_center}, Current grid: {self.camera.current_grid}, Active grid: {self.current_grid}')
             self.count = 0
 
 
