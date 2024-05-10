@@ -34,7 +34,10 @@ class Camera():
         self.map_center[0] = int(self.init_pos[0] - self._x // 64) - 1
         # self.x_slice = slice(int(
         #     self.map_center[0] - self.row_length // 2), int(self.map_center[0] + self.row_length // 2))
-        self.current_grid[0] = (self.map_center[0] - 1) // 20 - INIT_X // ROW_LENGTH
+        previous_grid = self.current_grid[0]
+        self.current_grid[0] = (self.map_center[0]) // 20 - INIT_X // ROW_LENGTH
+        if previous_grid != self.current_grid[0]:
+            print('Grid changed')
 
     @y.setter
     def y(self, value):
@@ -43,4 +46,7 @@ class Camera():
         self.map_center[1] = int(self.init_pos[1] - self._y // 64)
         # self.y_slice = slice(int(
         #     self.map_center[1] - self.col_length // 2), int(self.map_center[1] + self.col_length // 2))
+        previous_grid = self.current_grid[1]
         self.current_grid[1] = self.map_center[1] // 16 - INIT_Y // COLUMN_LENGTH
+        if previous_grid != self.current_grid[1]:
+            print('Grid changed')
