@@ -3,7 +3,7 @@ from loguru import logger
 import pygame
 
 from bodies.bodies import Enemy, Player
-from textures.textures import TextureMaster2 #, TextureMaster
+from textures.textures import TextureMaster
 from .menu import Dropdown
 from .camera import Camera
 
@@ -37,7 +37,7 @@ class Level(Scene):
         self.map = None
 
         self.camera = Camera((INIT_X, INIT_Y))
-        self.texture2 = TextureMaster2(screen, self.camera)
+        self.texture2 = TextureMaster(screen, self.camera)
 
         self.load_config(config_file)
         
