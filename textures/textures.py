@@ -56,10 +56,17 @@ class TextureMaster():
         return texture_group
     
     def create_active_map(self, map, camera, center):
-        self.active_map.append(self.create_texture_group(map, camera, center))
-        self.active_map.append(self.create_texture_group(map, camera, [center[0] + ROW_LENGTH, center[1]]))
-        self.active_map.append(self.create_texture_group(map, camera, [center[0] - ROW_LENGTH, center[1]]))
-        self.active_map.append(self.create_texture_group(map, camera, [center[0], center[1] - COLUMN_LENGTH]))
+        self.active_map.append(self.create_texture_group(map, camera, [center[0] - ROW_LENGTH, center[1] - COLUMN_LENGTH])) # North West
+        self.active_map.append(self.create_texture_group(map, camera, [center[0], center[1] - COLUMN_LENGTH])) # North
+        self.active_map.append(self.create_texture_group(map, camera, [center[0] + ROW_LENGTH, center[1] - COLUMN_LENGTH])) # North East
+        self.active_map.append(self.create_texture_group(map, camera, [center[0] - ROW_LENGTH, center[1]])) # West
+        self.active_map.append(self.create_texture_group(map, camera, center)) # Center
+        self.active_map.append(self.create_texture_group(map, camera, [center[0] + ROW_LENGTH, center[1]])) # East
+        self.active_map.append(self.create_texture_group(map, camera, [center[0] - ROW_LENGTH, center[1] + COLUMN_LENGTH])) # South West
+        self.active_map.append(self.create_texture_group(map, camera, [center[0], center[1] + COLUMN_LENGTH])) # South
+        self.active_map.append(self.create_texture_group(map, camera, [center[0] + ROW_LENGTH, center[1] + COLUMN_LENGTH])) # South East
+        
+        
         # self.sprite_map_east = self.texture2.create_texture_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
         # self.sprite_map_west = self.texture2.create_texture_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
         # self.sprite_map_north = self.texture2.create_texture_group(self.map, self.camera, [INIT_X, INIT_Y - COLUMN_LENGTH])
