@@ -49,7 +49,6 @@ class Body(pygame.sprite.Sprite):
 
     @x.setter
     def x(self, value):
-        # TODO: Find better way to deal with precision issue
         self._x = round(value, 5)
         self.rect.x = int(self._x - self.WIDTH / 2)
         # self.grid_x = int(self._x // GRID)
@@ -57,7 +56,6 @@ class Body(pygame.sprite.Sprite):
 
     @y.setter
     def y(self, value):
-        # TODO: Find better way to deal with precision issue
         self._y = round(value, 5)
         self.rect.y = int(self._y - self.HEIGHT / 2)
         # self.grid_y = int((self._y + self.grid_y_offset) // GRID)

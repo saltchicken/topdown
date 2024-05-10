@@ -28,7 +28,6 @@ class Camera():
 
     @x.setter
     def x(self, value):
-        # TODO: Find better way to deal with precision issue
         self._x = round(value, 5)
         # TODO: Why is -1 needed here. Has to do with self._x offset
         self.map_center[0] = int(self.init_pos[0] - self._x // 64) - 1
@@ -41,7 +40,6 @@ class Camera():
 
     @y.setter
     def y(self, value):
-        # TODO: Find better way to deal with precision issue
         self._y = round(value, 5)
         # TODO: +16 is added so that the grid is properly calculated. Why?
         self.map_center[1] = int(self.init_pos[1] - (self._y + 16) // 64)
