@@ -72,7 +72,7 @@ class Level(Scene):
         self.screen.fill(self.background)
         self.all_sprites.update()
         
-        for map in self.texture.active_map:
+        for map in self.texture.active_map.values():
             map.draw(self.screen)
             
         self.all_sprites.draw(self.screen)
@@ -115,7 +115,7 @@ class Level(Scene):
                 
     
     def map_grid_collisions(self):
-        for texture_group in self.texture.active_map:
+        for texture_group in self.texture.active_map.values():
             for texture in texture_group:
                 if texture.rect.collidepoint(self.player.standing_point):
                     texture.highlight(self.camera)
