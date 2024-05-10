@@ -39,8 +39,9 @@ INIT_Y = 24
             
 
 class Texture2(pygame.sprite.Sprite):
-    def __init__(self, image, info, position):
+    def __init__(self, screen, image, info, position):
         super().__init__()
+        self.screen = screen
         self.image = image
         self.info = info
         self.rect = self.image.get_rect()
@@ -54,6 +55,14 @@ class Texture2(pygame.sprite.Sprite):
         position[1] -= INIT_Y
         self.rect.x += position[0] * 64
         self.rect.y += position[1] * 64
+        
+    def highlight(self, camera):
+        overlay_color = (255, 0, 0)
+        alpha = 128
+        overlay = pygame.Surface((64, 64), pygame.locals.SRCALPHA)
+        overlay.fill((*overlay_color, alpha))
+        # self.screen.blit(overlay, (grid_x * 64 + self.camera.x, grid_y * 64 + self.camera.y))
+        self.screen.blit(overlay, (self.rect.x + camera.x, self.rect.y + camera.y))
 
 class TextureMaster2():
     def __init__(self, screen, camera, profile=''):
@@ -103,7 +112,7 @@ class TextureMaster2():
         for col_i, col in enumerate(map[y_slice]):
             for row_i, tile in enumerate(col[x_slice]):
                 # self.active_sprite_map.add(Texture2(self.texture_images[self.texture_mapping[tile]], self.texture_infos[self.texture_mapping[tile]], (row_i, col_i)))
-                sprite_map.add(Texture2(self.texture_images[self.texture_mapping[tile]], self.texture_infos[self.texture_mapping[tile]], [row_i + center[0], col_i + center[1]]))
+                sprite_map.add(Texture2(self.screen, self.texture_images[self.texture_mapping[tile]], self.texture_infos[self.texture_mapping[tile]], [row_i + center[0], col_i + center[1]]))
 
                 # print(self.texture_images[self.texture_mapping[col]])
                 # self.texture.draw_grid(col, col_i - 1, row_i - 1, camera)

@@ -1,3 +1,8 @@
+INIT_X = 30
+INIT_Y = 24
+ROW_LENGTH = 20
+COLUMN_LENGTH = 16
+
 class Camera():
     def __init__(self, init_pos):
         self.init_pos = init_pos
@@ -29,7 +34,7 @@ class Camera():
         self.map_center[0] = int(self.init_pos[0] - self._x // 64) - 1
         # self.x_slice = slice(int(
         #     self.map_center[0] - self.row_length // 2), int(self.map_center[0] + self.row_length // 2))
-        self.current_grid[0] = (self.map_center[0] - 1) // 20
+        self.current_grid[0] = (self.map_center[0] - 1) // 20 - INIT_X // ROW_LENGTH
 
     @y.setter
     def y(self, value):
@@ -38,4 +43,4 @@ class Camera():
         self.map_center[1] = int(self.init_pos[1] - self._y // 64)
         # self.y_slice = slice(int(
         #     self.map_center[1] - self.col_length // 2), int(self.map_center[1] + self.col_length // 2))
-        self.current_grid[1] = self.map_center[1] // 16
+        self.current_grid[1] = self.map_center[1] // 16 - INIT_Y // COLUMN_LENGTH

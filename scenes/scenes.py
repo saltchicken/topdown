@@ -90,15 +90,22 @@ class Level(Scene):
         self.sprite_map_east.draw(self.screen)
         self.sprite_map_west.draw(self.screen)
         self.sprite_map_north.draw(self.screen)
+        
+        self.sprite_map_center.sprites()[0].highlight(self.camera)
             
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
+        self.draw_player_center_point()
         self.visual_collisions()
         
         self.update_debug()
         self.highlight_grid(30, 24)
 
         pygame.display.flip()
+        
+    def draw_player_center_point(self):
+        point = (self.player.hitbox.x + self.player.hitbox.width // 2, self.player.hitbox.y + self.player.hitbox.height // 2)
+        pygame.draw.circle(self.screen, (255, 255, 255), (point[0], point[1]), 1)
         
     def highlight_grid(self, grid_x, grid_y):
         grid_x -= INIT_X
@@ -151,6 +158,7 @@ class Level(Scene):
             # logger.debug(f'{self.player.rect}')
             logger.debug(f'{self.camera.map_center}')
             logger.debug(f'{self.camera.current_grid}')
+            # logger.debug(f'{self.player.rect}')
             self.count = 0
 
 
