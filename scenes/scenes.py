@@ -91,7 +91,12 @@ class Level(Scene):
         self.sprite_map_west.draw(self.screen)
         self.sprite_map_north.draw(self.screen)
         
-        self.sprite_map_center.sprites()[0].highlight(self.camera)
+        # self.sprite_map_center.sprites()[0].highlight(self.camera)
+        
+        point = (self.player.hitbox.x + self.player.hitbox.width // 2 - self.camera.x, self.player.hitbox.y + self.player.hitbox.height // 2 - self.camera.y)
+        for texture in self.sprite_map_center:
+            if texture.rect.collidepoint(point):
+                texture.highlight(self.camera)
             
         self.all_sprites.draw(self.screen)
         self.draw_hitboxes()
