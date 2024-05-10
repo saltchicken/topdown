@@ -41,15 +41,6 @@ class Level(Scene):
 
         self.load_config(config_file)
         
-        # self.list_map_center = (len(self.map) // 2, len(self.map[0]) // 2)
-        # print(self.list_map_center)
-        
-        # self.texture2.add_grid(self.map, self.camera, (10, 8))
-        # self.texture2.add_grid(self.map, self.camera, (30, 8))
-        
-        # self.texture2.create_map_sprite_group(self.map, self.camera, (10, 8))
-        # self.texture2.create_map_sprite_group(self.map, self.camera, (30, 8))
-        
         self.sprite_map_center = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X, INIT_Y])
         self.sprite_map_east = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
         self.sprite_map_west = self.texture2.create_map_sprite_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
@@ -78,25 +69,11 @@ class Level(Scene):
     def update(self, events):
         self.screen.fill(self.background)
         self.all_sprites.update()
-
-        # Comment this out when testing TextreMaster2
-        # self.draw_map()
-        # active_sprite_map = self.create_map_sprites()
-        # self.active_sprite_map.draw(self.screen)
-        # self.texture2.grids[str((10,8))].draw(self.screen)
-        
-
-        # for grid in self.texture2.grids.values():
-        #     grid.draw(self.screen)
-        
-        # self.texture2.all_grids.draw(self.screen)
         
         self.sprite_map_center.draw(self.screen)
         self.sprite_map_east.draw(self.screen)
         self.sprite_map_west.draw(self.screen)
         self.sprite_map_north.draw(self.screen)
-        
-        # self.sprite_map_center.sprites()[0].highlight(self.camera)
         
             
         self.all_sprites.draw(self.screen)
@@ -165,10 +142,7 @@ class Level(Scene):
         self.count += 1
         if self.count >= 50:
             # Print stuff
-            # logger.debug(f'{self.player.rect}')
-            # logger.debug(f'{self.camera.map_center}')
             logger.debug(f'Map center: {self.camera.map_center}, Current grid: {self.camera.current_grid}')
-            # logger.debug(f'{self.player.rect}')
             self.count = 0
 
 
