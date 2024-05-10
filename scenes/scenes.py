@@ -95,7 +95,7 @@ class Level(Scene):
     def check_grid_change(self):
         if self.previous_grid != self.camera.current_grid:
             self.previous_grid = self.camera.current_grid.copy()
-            print('grid change')
+            print('grid change. New grid ' + str(self.camera.current_grid))
         
         
     def draw_player_center_point(self):
