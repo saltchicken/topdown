@@ -104,7 +104,7 @@ class Level(Scene):
         grid_x -= INIT_X
         grid_y -= INIT_Y
         # TODO: Figure out these magic numbers based on centering
-        grid_x += 10 - 1
+        grid_x += 10
         grid_y += 8
         overlay_color = (255, 0, 0)
         alpha = 128

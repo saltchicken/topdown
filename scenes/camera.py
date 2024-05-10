@@ -5,7 +5,7 @@ class Camera():
         # self.row_length = 22
         # self.col_length = 18
         # TODO: Should this be initialized with offset? Or set to 0.0
-        self._x = 32.0
+        self._x = -32.0
         self._y = 10.0
         self.current_grid = [0, 0]
         # self.x_slice = slice(int(
@@ -25,7 +25,8 @@ class Camera():
     def x(self, value):
         # TODO: Find better way to deal with precision issue
         self._x = round(value, 5)
-        self.map_center[0] = int(self.init_pos[0] - self._x // 64)
+        # TODO: Why is -1 needed here. Has to do with self._x offset
+        self.map_center[0] = int(self.init_pos[0] - self._x // 64) - 1
         # self.x_slice = slice(int(
         #     self.map_center[0] - self.row_length // 2), int(self.map_center[0] + self.row_length // 2))
         self.current_grid[0] = (self.map_center[0] - 1) // 20
