@@ -97,6 +97,7 @@ class Level(Scene):
         if self.previous_grid_x != self.camera.current_grid[0]:
             if self.previous_grid_x > self.camera.current_grid[0]:
                 print('x grid change left. New grid ' + str(self.camera.current_grid))
+                self.texture.active_map_replace_left(self.map, self.camera)
             else:
                 print('x grid change right. New grid ' + str(self.camera.current_grid))
                 self.texture.active_map_replace_right(self.map, self.camera)
@@ -104,9 +105,12 @@ class Level(Scene):
         if self.previous_grid_y != self.camera.current_grid[1]:
             if self.previous_grid_y > self.camera.current_grid[1]:
                 print('y grid change up. New grid ' + str(self.camera.current_grid))
+                self.texture.active_map_replace_up(self.map, self.camera)
             else:
                 print('y grid change down. New grid ' + str(self.camera.current_grid))
+                self.texture.active_map_replace_down(self.map, self.camera)
             self.previous_grid_y = self.camera.current_grid[1]
+        
         
         
     def draw_player_center_point(self):
@@ -165,7 +169,7 @@ class Level(Scene):
         self.count += 1
         if self.count >= 50:
             # Print stuff
-            logger.debug(f'Map center: {self.camera.map_center}, Current grid: {self.camera.current_grid}, Active grid: {self.current_grid}')
+            logger.debug(f'Map center: {self.camera.map_center}, Current grid: {self.camera.current_grid}, Active grid: {self.current_grid}, Grids: {len(self.texture.active_map.keys())}')
             self.count = 0
 
 

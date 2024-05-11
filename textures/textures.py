@@ -114,7 +114,45 @@ class TextureMaster():
         # grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
         # texture_group = self.create_texture_group(map, camera, grid)
         # self.active_map[str(center)] = texture_group
-        print(len(self.active_map.keys()))
+        
+    def active_map_replace_left(self, map, camera):
+        delete_keys = []
+        for grid in self.active_map.keys():
+            if eval(grid)[0] == camera.current_grid[0] + 2:
+                delete_keys.append(grid)
+        for key in delete_keys:
+            del self.active_map[key]
+        for i in range(3):
+            center = [camera.current_grid[0] - 1, camera.current_grid[1] - 1 + i]
+            grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+            texture_group = self.create_texture_group(map, camera, grid)
+            self.active_map[str(center)] = texture_group
+            
+    def active_map_replace_down(self, map, camera):
+        delete_keys = []
+        for grid in self.active_map.keys():
+            if eval(grid)[1] == camera.current_grid[1] - 2:
+                delete_keys.append(grid)
+        for key in delete_keys:
+            del self.active_map[key]
+        for i in range(3):
+            center = [camera.current_grid[0] - 1 + i, camera.current_grid[1] + 1]
+            grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+            texture_group = self.create_texture_group(map, camera, grid)
+            self.active_map[str(center)] = texture_group
+
+    def active_map_replace_up(self, map, camera):
+        delete_keys = []
+        for grid in self.active_map.keys():
+            if eval(grid)[1] == camera.current_grid[1] + 2:
+                delete_keys.append(grid)
+        for key in delete_keys:
+            del self.active_map[key]
+        for i in range(3):
+            center = [camera.current_grid[0] - 1 + i, camera.current_grid[1] - 1]
+            grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+            texture_group = self.create_texture_group(map, camera, grid)
+            self.active_map[str(center)] = texture_group
                 
 
             
