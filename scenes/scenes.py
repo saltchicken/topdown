@@ -99,6 +99,7 @@ class Level(Scene):
                 print('x grid change left. New grid ' + str(self.camera.current_grid))
             else:
                 print('x grid change right. New grid ' + str(self.camera.current_grid))
+                self.texture.active_map_replace_right(self.map, self.camera)
             self.previous_grid_x = self.camera.current_grid[0]
         if self.previous_grid_y != self.camera.current_grid[1]:
             if self.previous_grid_y > self.camera.current_grid[1]:

@@ -84,6 +84,30 @@ class TextureMaster():
         grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
         self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # South East
         
+    def active_map_replace_right(self, map, camera):
+        delete_keys = []
+        for grid in self.active_map.keys():
+            if eval(grid)[0] == camera.current_grid[0] - 2:
+                delete_keys.append(grid)
+        for key in delete_keys:
+            del self.active_map[key]
+        center = [camera.current_grid[0] + 1, camera.current_grid[1]]
+        grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+        texture_group = self.create_texture_group(map, camera, grid)
+        self.active_map[str(center)] = texture_group
+        center = [camera.current_grid[0] + 1, camera.current_grid[1] + 1]
+        grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+        texture_group = self.create_texture_group(map, camera, grid)
+        self.active_map[str(center)] = texture_group
+        center = [camera.current_grid[0] + 1, camera.current_grid[1] - 1]
+        grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+        texture_group = self.create_texture_group(map, camera, grid)
+        self.active_map[str(center)] = texture_group
+        print(len(self.active_map.keys()))
+                
+
+            
+        
         
         # self.sprite_map_east = self.texture2.create_texture_group(self.map, self.camera, [INIT_X + ROW_LENGTH, INIT_Y])
         # self.sprite_map_west = self.texture2.create_texture_group(self.map, self.camera, [INIT_X - ROW_LENGTH, INIT_Y])
