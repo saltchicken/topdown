@@ -122,7 +122,7 @@ class Player(Body):
         # super().__init__(self.camera, (width // 2 - 64, height // 2 - 64))
         super().__init__((10, 8))
 
-        self.move_speed = 3
+        self.move_speed = 10
         self.grid_y_offset = 54
         # Set x to _x to call the setter method. Needed or initialization is buggy due to initializing setter method.
         self.x = self._x

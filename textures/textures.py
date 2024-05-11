@@ -49,6 +49,7 @@ class TextureMaster():
     def create_texture_group(self, map, camera, center):
         x_slice = slice(int(center[0] - ROW_LENGTH // 2) + TEMP_LIST_MAP_CENTER[0], int(center[0] + ROW_LENGTH // 2) + TEMP_LIST_MAP_CENTER[0])
         y_slice = slice(int(center[1] - COLUMN_LENGTH // 2) + TEMP_LIST_MAP_CENTER[1], int(center[1] + COLUMN_LENGTH // 2) + TEMP_LIST_MAP_CENTER[1])
+        print(f'Creating grid for {x_slice} and {y_slice}. Grid: {center}')
         texture_group = TextureGroup(camera)
         for col_i, col in enumerate(map[y_slice]):
             for row_i, tile in enumerate(col[x_slice]):
@@ -56,33 +57,38 @@ class TextureMaster():
         return texture_group
     
     def create_active_map(self, map, camera, center):
-        grid = [center[0] - ROW_LENGTH, center[1] - COLUMN_LENGTH]
-        grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
-        self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # North West
-        grid = [center[0], center[1] - COLUMN_LENGTH]
-        grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
-        self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # North
-        grid = [center[0] + ROW_LENGTH, center[1] - COLUMN_LENGTH]
-        grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
-        self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # North East
-        grid = [center[0] - ROW_LENGTH, center[1]]
-        grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
-        self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # West
-        grid = center
-        grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
-        self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # Center
-        grid = [center[0] + ROW_LENGTH, center[1]]
-        grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
-        self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # East
-        grid = [center[0] - ROW_LENGTH, center[1] + COLUMN_LENGTH]
-        grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
-        self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # South West
-        grid = [center[0], center[1] + COLUMN_LENGTH]
-        grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
-        self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # South
-        grid = [center[0] + ROW_LENGTH, center[1] + COLUMN_LENGTH]
-        grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
-        self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # South East
+        for i in list(range(-1, 2)):
+            for j in list(range(-1, 2)):
+                grid = [center[0] + ROW_LENGTH * j, center[1] + COLUMN_LENGTH * i]
+                grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+                self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid))
+        # grid = [center[0] - ROW_LENGTH, center[1] - COLUMN_LENGTH]
+        # # grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+        # # self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # North West
+        # grid = [center[0], center[1] - COLUMN_LENGTH]
+        # # grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+        # # self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # North
+        # grid = [center[0] + ROW_LENGTH, center[1] - COLUMN_LENGTH]
+        # # grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+        # # self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # North East
+        # grid = [center[0] - ROW_LENGTH, center[1]]
+        # grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+        # self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # West
+        # grid = center
+        # grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+        # self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # Center
+        # grid = [center[0] + ROW_LENGTH, center[1]]
+        # grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+        # self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # East
+        # grid = [center[0] - ROW_LENGTH, center[1] + COLUMN_LENGTH]
+        # grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+        # self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # South West
+        # grid = [center[0], center[1] + COLUMN_LENGTH]
+        # grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+        # self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # South
+        # grid = [center[0] + ROW_LENGTH, center[1] + COLUMN_LENGTH]
+        # grid_name = [grid[0] // ROW_LENGTH, grid[1] // COLUMN_LENGTH]
+        # self.active_map[str(grid_name)] = (self.create_texture_group(map, camera, grid)) # South East
         
     def active_map_replace_right(self, map, camera):
         delete_keys = []
@@ -91,18 +97,23 @@ class TextureMaster():
                 delete_keys.append(grid)
         for key in delete_keys:
             del self.active_map[key]
-        center = [camera.current_grid[0] + 1, camera.current_grid[1]]
-        grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
-        texture_group = self.create_texture_group(map, camera, grid)
-        self.active_map[str(center)] = texture_group
-        center = [camera.current_grid[0] + 1, camera.current_grid[1] + 1]
-        grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
-        texture_group = self.create_texture_group(map, camera, grid)
-        self.active_map[str(center)] = texture_group
-        center = [camera.current_grid[0] + 1, camera.current_grid[1] - 1]
-        grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
-        texture_group = self.create_texture_group(map, camera, grid)
-        self.active_map[str(center)] = texture_group
+        for i in range(3):
+            center = [camera.current_grid[0] + 1, camera.current_grid[1] - 1 + i]
+            grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+            texture_group = self.create_texture_group(map, camera, grid)
+            self.active_map[str(center)] = texture_group
+        # center = [camera.current_grid[0] + 1, camera.current_grid[1]]
+        # grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+        # texture_group = self.create_texture_group(map, camera, grid)
+        # self.active_map[str(center)] = texture_group
+        # center = [camera.current_grid[0] + 1, camera.current_grid[1] + 1]
+        # grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+        # texture_group = self.create_texture_group(map, camera, grid)
+        # self.active_map[str(center)] = texture_group
+        # center = [camera.current_grid[0] + 1, camera.current_grid[1] - 1]
+        # grid = [center[0] * ROW_LENGTH, center[1] * COLUMN_LENGTH]
+        # texture_group = self.create_texture_group(map, camera, grid)
+        # self.active_map[str(center)] = texture_group
         print(len(self.active_map.keys()))
                 
 
